@@ -3,7 +3,7 @@
 
 ### Bubble Sort
 설명도 추가할 것
-그림도 찾아서 추가할 것
+![Bubble sort gif](https://i.stack.imgur.com/XNbE0.gif)
 ```python
 N = 6
 arr = [7, 2, 5, 3, 1, 5]
