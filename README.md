@@ -5,3 +5,6 @@
 ### [Git](./Git/Git.md)
 ### [Python](./Python/Python.md)
 ### [Java](./Java/Java.md)
+### CS
+- [OS](./CS/OS/OS.md)
+- [Algorithm](/CS/Algorithm/Algorithm.md)
