@@ -10,7 +10,7 @@
   - Binary Digit
   - 컴퓨터가 값을 저장하는 최소 단위
 - Byte
-  - 8bits
+  - 1Byte = 8bit
   - 2^8=256가지 값을 표현
   - 컴퓨터 정보 처리의 최소 단위
 - 2진수(Binary)
