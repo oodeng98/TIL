@@ -70,3 +70,29 @@
     * 설정 목록은 사용언어, 환경, 에디터, 프레임워크
         > Ex) Python, VisualStudioCode, Django, Jupyternotebook, Pycharm, Vue, Node
     * 생성된 내용을 그대로 복사하여 .gitignore로 사용
+
+### 403 에러 해결 방법
+- 403 에러는 해당 레포지토리 주소에 접근 권한이 없을 경우 발생
+```bash
+remote: Permission to oodeng98/TIL.git denied to ???????.
+fatal: unable to access 'https://github.com/oodeng98/TIL.git/': The requested URL returned error: 403
+```
+#### 해결 방법
+1. 작성자(Author) 정보 삭제
+```bash
+# 기존 Author 정보 확인
+git config --global --list
+# 기존 Author 정보 있을 시, 초기화
+git config --unset --global user.email
+git config --unset --global user.name
+# 새로운 Author 정보 등록
+git config --global user.email '내 이메일'
+git config --global user.name '내 이름'
+```
+2. 로그인 계정 삭제
+- 제어판 -> 사용자 계정 -> 자격 증명 관리자 -> Windows 자격 증명 -> github 관련 자격 증명 제거
+
+3. Git push 실행
+![Git push 실행시 화면](https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2Fcvwpoc%2FbtqDvgxGy4Y%2FhNJg8JSP395eFq7eSTCMDk%2Fimg.png)
+- 로그인하면 끝
+#### [출처](https://somjang.tistory.com/entry/Git-Git-Bash-%ED%84%B0%EB%AF%B8%EB%84%90-%EA%B3%84%EC%A0%95-%EB%B3%80%EA%B2%BD-%EB%B0%A9%EB%B2%95)
