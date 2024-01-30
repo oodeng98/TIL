@@ -3,11 +3,11 @@
 <!-- 알고리즘 클릭하면 해당 알고리즘 위치로 넘기는 기능 구현할 것 -->
 |정렬 알고리즘|시간 복잡도|최악 시간복잡도|알고리즘 기법|비고|
 |---|---|---|---|---|
-|Bubble Sort|O(n^2)|O(n^2)|비교와 교환|쉬운 코딩|
-|Counting Sort|O(n+k)|O(n+k)|비교환 방식|n이 비교적 작을 때만 가능|
+|[Bubble Sort](#bubble-sort)|O(n^2)|O(n^2)|비교와 교환|쉬운 코딩|
+|[Counting Sort](#counting-sort)|O(n+k)|O(n+k)|비교환 방식|n이 비교적 작을 때만 가능|
 |Selection Sort|O(n^2)|O(n^2)|비교와 교환|교환의 횟수가 버블, 삽입 정렬보다 작음|
 |Quick Sort|O(nlogn)|O(n^2)|분할 정복|평균적으로 가장 빠름|
-|Insertion Sort|O(n^2)|O(n^2)|비교와 교환|n의 개수가 작을 때 효율적|
+|[Insertion Sort](#insertion-sort)|O(n^2)|O(n^2)|비교와 교환|n의 개수가 작을 때 효율적|
 |Merge Sort|O(nlogn)|O(nlogn)|분할 정복|연결 리스트의 경우 가장 효율적|
 
 
