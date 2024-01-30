@@ -1,0 +1,91 @@
+# Sort
+
+<!-- 알고리즘 클릭하면 해당 알고리즘 위치로 넘기는 기능 구현할 것 -->
+|정렬 알고리즘|시간 복잡도|최악 시간복잡도|알고리즘 기법|비고|
+|---|---|---|---|---|
+|Bubble Sort|O(n^2)|O(n^2)|비교와 교환|쉬운 코딩|
+|Counting Sort|O(n+k)|O(n+k)|비교환 방식|n이 비교적 작을 때만 가능|
+|Selection Sort|O(n^2)|O(n^2)|비교와 교환|교환의 횟수가 버블, 삽입 정렬보다 작음|
+|Quick Sort|O(nlogn)|O(n^2)|분할 정복|평균적으로 가장 빠름|
+|Insertion Sort|O(n^2)|O(n^2)|비교와 교환|n의 개수가 작을 때 효율적|
+|Merge Sort|O(nlogn)|O(nlogn)|분할 정복|연결 리스트의 경우 가장 효율적|
+
+
+### Bubble Sort
+인접한 두개의 원소를 비교하며 자리를 계속 교환하는 정렬 알고리즘
+* 교환하며 자리를 이동하는 모습이 물 위로 올라오는 거품 모양과 비슷하다고 하여 버블 정렬이라고 함
+
+![Bubble sort gif](https://i.stack.imgur.com/XNbE0.gif)
+
+#### 정렬 과정
+1. 첫번째 원소부터 인접한 원소끼리 큰 원소가 오른쪽으로 이동하도록 자리를 교환하며 마지막 자리까지 이동
+2. 한 단계가 끝나면 가장 큰 원소가 마지막 자리로 이동
+3. 앞선 과정을 반복
+
+
+```python
+N = 6
+arr = [7, 2, 5, 3, 1, 5]
+for i in range(N-1, 0, -1): # 정렬할 구간의 마지막 인덱스
+    for j in range(i): # 비교할 두 원소 중 왼쪽의 인덱스
+        if arr[j] > arr[j+1]:
+            arr[j], arr[j+1] = arr[j+1], arr[j]
+print(arr)
+# 결과: [1, 2, 3, 5, 5, 7]
+```
+
+#### 시간 복잡도
+O(n^2)
+
+
+### Counting Sort
+항목들의 순서를 결정하기 위해 각 항목이 몇개씩 있는지 세는 작업을 하여 선형 시간에 정렬하는 알고리즘
+
+#### 제한 사항
+정수나 정수로 표현할 수 있는 자료에 대해서만 적용 가능
+- 각 항목의 발생 횟수를 기록하기 위해 정수 항목으로 인덱스 되는 배열을 사용하기 때문
+- 이를 위해 집합 내의 가장 큰 정수를 알아야 함
+
+![Counting Sort gif1](https://velog.velcdn.com/images%2Fcrosstar1228%2Fpost%2Fd9b38630-27b6-4977-a26a-41008d887593%2Fimg.gif)
+![Counting Sort gif2](https://velog.velcdn.com/images%2Fcrosstar1228%2Fpost%2Ff104788c-1e62-47d4-a641-fe2c80aa05f9%2Fimg%20(1).gif)
+
+#### 정렬 과정
+1. Input Array에서 각 항목들의 횟수를 세고, 정수 항목들로 직접 인덱스 되는 Count Array에 저장
+2. 정렬된 배열에서 각 항목의 앞에 위치할 항목의 개수를 반영하기 위해 Count Array의 원소 조정
+3. Input Array를 순회하며 항목을 Result Array의 Count Array[항목] 인덱스에 삽입
+  - Count Array[항목] -= 1
+
+```python
+N = 6 # input_array의 길이
+K = 9 # input 의 최댓값
+input_array = [9, 2, 4, 5, 1, 3]
+count_array = [0] * (K + 1)
+result_array = [0] * N
+for x in input_array: # 정렬 과정 1번
+    count_array[x] += 1
+
+for i in range(1, K+1): # 정렬 과정 2번
+    count_array[i] += count_array[i-1]
+
+for i in range(N-1, -1, -1): # 정렬 과정 3번
+    # 왜 뒤에서부터 순회함?
+    # 원래의 순서를 유지하기 위해서
+    # Ex) (2, 1), (2, 2)이고 첫번째 원소를 기준으로 정렬한다면 (2, 1), (2, 2) 순서를 유지할 수 있다.
+    # 앞에서부터 순회한다면 (2, 2), (2, 1)로 변경되어 정렬될 것
+    count_array[input_array[i]] -= 1
+    result_array[count_array[input_array[i]]] = input_array[i]
+# 결과: [1, 2, 3, 4, 5, 9]
+```
+
+#### 시간 복잡도
+O(n + k)
+- n은 리스트의 길이, k는 정수의 최댓값
+
+
+### Insertion Sort
+![Insertion Sort gif](https://i.stack.imgur.com/nL73t.gif)
+
+### 출처
+
+[Bubble Sort, Insertion Sort gif](https://stackoverflow.com/questions/67729819/is-it-bubble-sort-or-insertion-sort)  
+[Counting Sort gif](https://velog.io/@crosstar1228/DSsorting3-counting-radix-topological)
