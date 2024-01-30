@@ -1,16 +1,23 @@
 # Algorithm
 
+### [Sorting](./Sorting.md)
 
-### Bubble Sort
-설명도 추가할 것
-![Bubble sort gif](https://i.stack.imgur.com/XNbE0.gif)
-```python
-N = 6
-arr = [7, 2, 5, 3, 1, 5]
-for i in range(N-1, 0, -1): # 정렬할 구간의 마지막 인덱스
-    for j in range(i): # 비교할 두 원소 중 왼쪽의 인덱스
-        if arr[j] > arr[j+1]:
-            arr[j], arr[j+1] = arr[j+1], arr[j]
-print(arr)
-# 결과: [1, 2, 3, 5, 5, 7]
-```
+### 완전 탐색
+- Brute-Force, 혹은 generate-and-test라고도 부름
+- 모든 경우의 수를 테스트한 후, 최종 해답을 도출
+- 경우의 수가 작을 때 유용
+- 모든 경우의 수를 테스트하기 때문에 수행 속도는 느리지만, 해답을 찾아낼 확률이 높음
+- 문제의 마땅한 풀이 방법이 떠오르지 않으면 우선 완전 탐색으로 접근하고 추후 다른 알고리즘을 활용하여 성능을 개선하는 것이 바람직함
+
+[예시: 숫자 야구](https://www.acmicpc.net/problem/2503)
+
+### Greedy(탐욕) 알고리즘
+- 여러 경우 중 최적이라고 생각되는 것을 선택하는 방식
+- 각 시점에서 최적을 결정했다고 해서 최종 해답이 최적이라는 보장은 없음
+
+#### 동작 과정
+1. 해 선택: 현재 상태에서 최적 해를 구한 뒤, 이를 부분해 집합(Solution Set)에 추가
+2. 실행 가능성 검사: 새로운 부분해 집합이 실행 가능한지 확인
+3. 해 검사: 새로운 부분해 집합이 문제의 해가 되는지 확인  
+
+[예시: 거스름돈 줄이기](https://www.acmicpc.net/problem/5585)
