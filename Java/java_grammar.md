@@ -11,8 +11,8 @@
   - %s: 문자열(**s**tring)
   - %o: 8진수(**o**ctal)
   - %x: 16진수(He**x**adecimal)
-    - 10~15를 a~f로 출력
-      - %X: A~F로 출력
+    - 10 ~ 15를 a ~ f로 출력
+      - %X: A ~ F로 출력
   - %nd: n칸을 확보한 상태로 우측에 붙여서 출력
   
 - [escape 문자](./escape.md)
@@ -68,4 +68,4 @@ int n2 = n1;
 |숫자형|실수형|double|8byte|0.0d||
 - 실수형의 경우 근사값임.
 - 컴퓨터의 2진법과 인간의 10진법 간의 차이 때문
-- [왜 양수는 범위가 1 작은가?](/TIL/CS/Etc/value_range.md)
+- [왜 양수는 범위가 1 작은가?](/CS/Etc/value_range.md)
