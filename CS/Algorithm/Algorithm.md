@@ -72,6 +72,24 @@ def binarySearch(data, low, high, key):
 ![시간 비교](https://www.mathwarehouse.com/programming/images/binary-vs-linear-search/binary-and-linear-search-animations.gif)
 ![Best Case](https://www.mathwarehouse.com/programming/images/binary-vs-linear-search/linear-vs-binary-search-best-case.gif)
 
+### 비트 연산을 활용한 부분집합 만들기
+```python
+def comb(arr, n):
+    result = []
+    for i in range(1<<n): # 부분 집합의 개수, 1<<n은 2**(n)과 같음
+        temp = []
+        for j in range(n):
+            if i & (1<<j):
+                temp.append(arr[j])
+        result.append(temp)
+    return result
+```
+#### 필자의 이해 및 설명
+부분 집합의 개수는 n ** 2로, 0부터 n ** 2까지 수를 모두 이진법으로 변환해서 생각해보자.
+중요한 것은 모든 숫자는 각각 다른 이진법 표기 방식을 가진다는 점이다.  
+그중 1로 표기된 부분 각각의 오른쪽부터 센 비트 순서를 indexes라고 표현하겠다.  
+그 후 부분 집합을 구하고자 하는 집합(위의 코드에서 arr을 의미)에서 indexes에 해당하는 값을 가져오면 하나의 부분 집합을 구할 수 있고, 이를 반복하면 된다.
+
 ### 출처
 
 [Math Warehouse](https://www.mathwarehouse.com/programming/gifs/binary-vs-linear-search.php)
