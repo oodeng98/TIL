@@ -5,7 +5,7 @@
 |---|---|---|---|---|
 |[Bubble Sort](#bubble-sort)|O(n^2)|O(n^2)|비교와 교환|쉬운 코딩|
 |[Counting Sort](#counting-sort)|O(n+k)|O(n+k)|비교환 방식|n이 비교적 작을 때만 가능|
-|Selection Sort|O(n^2)|O(n^2)|비교와 교환|교환의 횟수가 버블, 삽입 정렬보다 작음|
+|[Selection Sort](#selection-sort)|O(n^2)|O(n^2)|비교와 교환|교환의 횟수가 버블, 삽입 정렬보다 작음|
 |Quick Sort|O(nlogn)|O(n^2)|분할 정복|평균적으로 가장 빠름|
 |[Insertion Sort](#insertion-sort)|O(n^2)|O(n^2)|비교와 교환|n의 개수가 작을 때 효율적|
 |Merge Sort|O(nlogn)|O(nlogn)|분할 정복|연결 리스트의 경우 가장 효율적|
@@ -81,6 +81,29 @@ for i in range(N-1, -1, -1): # 정렬 과정 3번
 O(n + k)
 - n은 리스트의 길이, k는 정수의 최댓값
 
+### Selection Sort
+주어진 자료들 중 가장 작은 값의 원소부터 차례대로 선택하여 위치를 교환하며 정렬하는 알고리즘
+
+![Selection Sort gif](https://miro.medium.com/v2/resize:fit:720/format:webp/1*5WXRN62ddiM_Gcf4GDdCZg.gif)
+
+#### 정렬 과정
+1. 주어진 리스트에서 최솟값 탐색
+2. 최솟값을 리스트의 맨 앞 값과 교환
+3. 맨 앞 값을 제외한 리스트에서 앞선 과정 반복
+```python
+N = 6
+arr = [7, 2, 5, 3, 1, 5]
+for i in range(N-1):
+    minIndex = i
+    for j in range(i+1, N):
+        if arr[j] < arr[minIndex]:
+            minIndex = j
+    arr[i], arr[minIndex] = arr[minIndex], arr[i]
+# 결과: [1, 2, 3, 5, 5, 7]
+```
+
+#### 시간 복잡도
+O(n^2)
 
 ### Insertion Sort
 ![Insertion Sort gif](https://i.stack.imgur.com/nL73t.gif)
@@ -88,4 +111,5 @@ O(n + k)
 ### 출처
 
 [Bubble Sort, Insertion Sort gif](https://stackoverflow.com/questions/67729819/is-it-bubble-sort-or-insertion-sort)  
-[Counting Sort gif](https://velog.io/@crosstar1228/DSsorting3-counting-radix-topological)
+[Counting Sort gif](https://velog.io/@crosstar1228/DSsorting3-counting-radix-topological)  
+[Selection Sort gif](http://www.xybernetics.com/techtalk/SortingAlgorithmsExplained/SortingAlgorithmsExplained.html)
