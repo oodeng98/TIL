@@ -71,3 +71,7 @@ def binarySearch(data, low, high, key):
 #### 이진탐색 vs 순차탐색
 ![시간 비교](https://www.mathwarehouse.com/programming/images/binary-vs-linear-search/binary-and-linear-search-animations.gif)
 ![Best Case](https://www.mathwarehouse.com/programming/images/binary-vs-linear-search/linear-vs-binary-search-best-case.gif)
+
+### 출처
+
+[Math Warehouse](https://www.mathwarehouse.com/programming/gifs/binary-vs-linear-search.php)
