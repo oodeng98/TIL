@@ -59,10 +59,72 @@ def binarySearch(data, low, high, key):
 ![Best Case](https://www.mathwarehouse.com/programming/images/binary-vs-linear-search/linear-vs-binary-search-best-case.gif)
 
 
-### KMP 알고리즘
+### KMP(Knuth-Morris-Pratt)  알고리즘
 - 불일치가 발생한 스트링의 앞 부분에 어떤 문자가 있는지 미리 알고 있으므로, 불일치가 발생한 앞 부분에 대해 다시 비교하지 않고 매칭을 진행
+- 패턴을 전처리하여 잘못된 시작을 최소화
+#### 검색 과정
+![LPS](https://miro.medium.com/v2/resize:fit:720/format:webp/1*OIb4erqMedwaze8aTUi9gw.gif)
+
+![KMP gif](https://velog.velcdn.com/images/junhok82/post/f3d31545-01f3-43e0-87ad-bd607ec589f2/kmp.gif)
 <!-- gif 찾아서 넣어놓기 -->
+
+
+```python
+def kmp(t, p):
+    N = len(t)
+    M = len(p)
+    lps = [0] * (M+1)
+    # lps 찾기
+    j = 0
+    lps[0] = -1
+    for i in range(1, M):
+        lps[i] = j
+        if p[i] == p[j]:
+            j += 1
+        else:
+            j = 0
+    lps[M] = j
+    print(lps)
+    # search
+    i = 0 # 비교할 텍스트 위치
+    j = 0 # 비교할 패턴 위치
+    while i < N  and j <= M:
+        if j == -1 or t[i] == p[j]: # 첫글자가 불일치했거나, 일치하면
+            i += 1
+            j += 1
+        else:
+            j = lps[j]
+        if j == M: # j가 len(p)와 같은 경우 -> 패턴을 찾은 경우
+            print(i-M, end=' ') # t에서 패턴이 시작되는 index 출력
+            j = lps[j]
+    print()
+    return
+
+t = 'zzzabcdabcdabcefabcd'
+p = 'abcdabcef'
+kmp(t, p)
+# result
+# [-1, 0, 0, 0, 0, 1, 2, 3, 0, 0]
+# 7
+```
+<!-- https://velog.io/@junhok82/KMP
+https://towardsdatascience.com/pattern-search-with-the-knuth-morris-pratt-kmp-algorithm-8562407dba5b 참고해서 다시 정리 -->
 #### 시간 복잡도
 O(M+N)
-### 보이어 무어 알고리즘(Boyer-Moore algorithm)
+
+### 보이어 무어(Boyer-Moore algorithm) 알고리즘
+패턴의 오른쪽 끝에 있는 문자가 불일치하고 이 문자가 패턴 내에 존재하지 않는 경우 패턴의 길이만큼 이동
+- 오른쪽에서 왼쯕으로 비교
+- 대부분의 상용 소프트웨어에서 채택하고 있는 알고리즘
+#### 검색 과정
+![Boyer-Moore gif](https://1104616303-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-MTi055M1rv010z1nQle%2Fuploads%2Fgit-blob-3a3ddea1cb8187bd27cc541c64c2c3fc70485196%2FGIF%202021-02-19%20%EC%98%A4%ED%9B%84%2012-10-53.gif?alt=media)
+```python
+# 나중에 추가할 것
+```
 <!-- gif 찾아서 넣어놓기 -->
+
+### 출처
+
+[이진탐색 vs 순차탐색](https://www.mathwarehouse.com/)  
+[KMP gif](https://velog.io/@junhok82/KMP)  
+[보이어 무어 gif](https://til.hyunjin.space/algorithm/boyer-moore-horspool-algorithm)
