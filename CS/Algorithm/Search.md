@@ -4,8 +4,14 @@
 저장되어 있는 자료 중 원하는 자료를 찾는 것
 - 탐색 키: 자료를 구별하여 인식할 수 있는 키
 
-### 완전 탐색
-- Brute-Force, 혹은 generate-and-test라고도 부름
+[Brute Force](#brute-force완전-탐색)  
+[Sequential Search](#sequential-search순차-탐색)  
+[Binary Search](#binary-search이진-탐색)  
+[KMP](#kmpknuth-morris-pratt-알고리즘)  
+[Boyer Moore](#boyer-moore보이어-무어-알고리즘)
+
+### Brute Force(완전 탐색)
+- generate-and-test라고도 부름
 - 모든 경우의 수를 테스트한 후, 최종 해답을 도출
 - 경우의 수가 작을 때 유용
 - 모든 경우의 수를 테스트하기 때문에 수행 속도는 느리지만, 해답을 찾아낼 확률이 높음
@@ -13,8 +19,7 @@
 
 [예시: 숫자 야구](https://www.acmicpc.net/problem/2503)
 
-### Sequential Search
-순차 탐색
+### Sequential Search(순차 탐색)
 - 가장 간단하고 직관적인 검색 방법
 - 배열이나 연결 리스트 등 순차적으로 구현된 자료구조에서 유용
 - 알고리즘이 단순하고 구현이 쉽지만, 검색 대상의 수가 많은 경우 비효율적
@@ -29,8 +34,7 @@
 1. 자료를 순차적으로 검색하면서 키 값을 비교
 2. 원소의 키 값이 검색 대상의 키 값보다 커지면 검색 종료
 
-### Binary Search
-이진 탐색
+### Binary Search(이진 탐색)
 - 자료 가운데에 있는 원소의 키 값과 비교하여 다음 검색의 위치를 결정하고 검색을 진행하는 방법
 - **이진 탐색을 하기 위해선 자료가 정렬된 상태여야 한다**
 
@@ -59,7 +63,7 @@ def binarySearch(data, low, high, key):
 ![Best Case](https://www.mathwarehouse.com/programming/images/binary-vs-linear-search/linear-vs-binary-search-best-case.gif)
 
 
-### KMP(Knuth-Morris-Pratt)  알고리즘
+### KMP(Knuth Morris Pratt)  알고리즘
 - 불일치가 발생한 스트링의 앞 부분에 어떤 문자가 있는지 미리 알고 있으므로, 불일치가 발생한 앞 부분에 대해 다시 비교하지 않고 매칭을 진행
 - 패턴을 전처리하여 잘못된 시작을 최소화
 #### 검색 과정
@@ -112,7 +116,7 @@ https://towardsdatascience.com/pattern-search-with-the-knuth-morris-pratt-kmp-al
 #### 시간 복잡도
 O(M+N)
 
-### 보이어 무어(Boyer-Moore algorithm) 알고리즘
+### Boyer Moore(보이어 무어) 알고리즘
 패턴의 오른쪽 끝에 있는 문자가 불일치하고 이 문자가 패턴 내에 존재하지 않는 경우 패턴의 길이만큼 이동
 - 오른쪽에서 왼쯕으로 비교
 - 대부분의 상용 소프트웨어에서 채택하고 있는 알고리즘
@@ -123,8 +127,25 @@ O(M+N)
 ```
 <!-- gif 찾아서 넣어놓기 -->
 
-### 출처
+### DFS(Depth First Search)
+1. 시작 정점의 한 방향으로 갈 수 있는 경로가 있는 곳까지 탐색
+2. 더 이상 갈 곳이 없으면 가장 마지막에 만났던 갈림길 간선이 있는 정점으로 복귀
+3. 다른 갈림길로 갈 수 있는 경로까지 탐색
+4. 앞선 과정을 반복하여 모든 정점을 방문  
 
+**가장 마지막에 만났던 갈림길의 정점으로 되돌아가야 하므로 후입선출(FILO) 구조의 스택 활용**
+#### 검색 과정
+![DFS gif](https://velog.velcdn.com/images%2Fhiminhee%2Fpost%2F6a5f8969-1d9f-4df3-a5ba-33f8fa5e3ca4%2FDFS.gif)
+```python
+```
+### BFS(Breadth First Search)
+#### 검색 과정
+![BFS gif](https://velog.velcdn.com/images%2Fhiminhee%2Fpost%2F89922593-68b6-4805-a636-53bdfd312140%2FBFS.gif)
+```python
+```
+
+### 출처
 [이진탐색 vs 순차탐색](https://www.mathwarehouse.com/)  
 [KMP gif](https://velog.io/@junhok82/KMP)  
-[보이어 무어 gif](https://til.hyunjin.space/algorithm/boyer-moore-horspool-algorithm)
+[보이어 무어 gif](https://til.hyunjin.space/algorithm/boyer-moore-horspool-algorithm)  
+[DFS, BFS gif](https://velog.io/@himinhee/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-DFS%EA%B9%8A%EC%9D%B4-%EC%9A%B0%EC%84%A0-%ED%83%90%EC%83%89-BFS%EB%84%88%EB%B9%84-%EC%9A%B0%EC%84%A0-%ED%83%90%EC%83%89)
