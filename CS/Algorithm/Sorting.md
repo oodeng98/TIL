@@ -5,9 +5,9 @@
 |[Bubble Sort](#bubble-sort)|O(n^2)|O(n^2)|비교와 교환|쉬운 코딩|
 |[Counting Sort](#counting-sort)|O(n+k)|O(n+k)|비교환 방식|n이 비교적 작을 때만 가능|
 |[Selection Sort](#selection-sort)|O(n^2)|O(n^2)|비교와 교환|교환의 횟수가 버블, 삽입 정렬보다 작음|
-|Quick Sort|O(nlogn)|O(n^2)|분할 정복|평균적으로 가장 빠름|
 |[Insertion Sort](#insertion-sort)|O(n^2)|O(n^2)|비교와 교환|n의 개수가 작을 때 효율적|
-|Merge Sort|O(nlogn)|O(nlogn)|분할 정복|연결 리스트의 경우 가장 효율적|
+|[Quick Sort](#quick-sort)|O(nlogn)|O(n^2)|분할 정복|평균적으로 가장 빠름|
+|[Merge Sort](#merge-sort합병-정렬)|O(nlogn)|O(nlogn)|분할 정복|연결 리스트의 경우 가장 효율적|
 
 
 ### Bubble Sort
@@ -32,9 +32,6 @@ for i in range(N-1, 0, -1): # 정렬할 구간의 마지막 인덱스
 print(arr)
 # 결과: [1, 2, 3, 5, 5, 7]
 ```
-
-#### 시간 복잡도
-O(n^2)
 
 
 ### Counting Sort
@@ -101,14 +98,59 @@ for i in range(N-1):
 # 결과: [1, 2, 3, 5, 5, 7]
 ```
 
-#### 시간 복잡도
-O(n^2)
-
 ### Insertion Sort
 ![Insertion Sort gif](https://i.stack.imgur.com/nL73t.gif)
+
+### Quick Sort
+주어진 배열을 두개로 분리하고, 각각을 정렬하는 것
+
+![Quick sort gif](https://engineering.fb.com/wp-content/uploads/2022/07/Hermes-quicksort.gif)
+
+#### 정렬 과정
+1. 리스트 가운데서 하나의 원소(Pivot)을 고름
+2. 피벗 앞에는 피벗보다 값이 작은 모든 원소들이 오고, 피벗 뒤에는 피벗보다 값이 큰 모든 원소들이 오도록 피벗을 기준으로 리스트를 나눔(이렇게 리스트를 둘로 나누는 것을 분할이라고 한다.)
+3. 분할된 두개의 작은 리스트에 대해 재귀적으로 이 과정을 반복, 재귀는 리스트의 크기가 0이나 1이 될 때까지 반복
+
+
+```python
+def quickSort(a, begin, end):
+    if begin < end:
+        print(a, a[begin])  # 정렬 현황과 pivot의 값을 표현
+        p = partition(a, begin, end)
+        quickSort(a, begin, p - 1)
+        quickSort(a, p + 1, end)
+        
+
+
+def partition(a, begin, end):
+    # pivot = (begin + end) // 2
+    pivot = begin # pivot의 위치는 대부분 begin으로 잡는듯
+    l = begin
+    r = end
+    while l < r:
+        while l < r and a[l] < a[pivot]:
+            l += 1  # l보다 왼쪽에 있는 값은 모두 a[pivot]보다 작음
+        while l < r and a[pivot] <= a[r]:
+            r -= 1  # l보다 오른쪽에 있는 값은 모두 a[pivot]보다 큼
+            # a[pivot]과 a[r]의 값이 같아도 r-=1이 실행되므로 l == r이 될 수 있음
+        if l < r:  # 아직도 r이 l보다 오른쪽에 있으면?
+            if l == pivot:  # 아직 정렬이 안되었는데 l이 pivot에 도달했다면?
+                pivot = r  # pivot을 좀 더 오른쪽으로 옮겨줌
+            a[l], a[r] = a[r], a[l]  # a[r] <= a[pivot] <= a[l]인 상태이므로 변경
+    a[pivot], a[r] = a[r], a[pivot]
+    # 현재 l == r, pivot = l + 1인 상태, l + 1 == r이 되도록 변경
+    return r
+
+lst = [69, 10, 30, 2, 16, 8, 31, 22]
+quickSort(lst, 0, len(lst) - 1)
+```
+
+### Merge Sort(합병 정렬)
+
 
 ### 출처
 
 [Bubble Sort, Insertion Sort gif](https://stackoverflow.com/questions/67729819/is-it-bubble-sort-or-insertion-sort)  
 [Counting Sort gif](https://velog.io/@crosstar1228/DSsorting3-counting-radix-topological)  
-[Selection Sort gif](http://www.xybernetics.com/techtalk/SortingAlgorithmsExplained/SortingAlgorithmsExplained.html)
+[Selection Sort gif](http://www.xybernetics.com/techtalk/SortingAlgorithmsExplained/SortingAlgorithmsExplained.html)  
+[Quick Sort gif](https://engineering.fb.com/2022/07/20/security/hermes-quicksort-to-run-doom/attachment/hermes-quicksort/)
