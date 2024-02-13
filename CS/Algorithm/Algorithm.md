@@ -30,6 +30,14 @@ def fibo(n):
         f[i] = f[i-1] + f[i-2]
     return f[n]
 ```
+
+
+### Divide and Conquer(분할 정복)
+문제를 작은 문제로 분리하고 각각을 해결한 다음, 결과를 모아서 원래의 문제를 해결하는 방법
+#### Divided and Conquer의 대표적인 알고리즘
+[Quick Sort](./Sorting.md#quick-sort)
+
+
 ### 비트 연산을 활용한 부분집합 만들기
 ```python
 def comb(arr, n):
