@@ -101,4 +101,37 @@ def Qpeek():
 #### index의 순환
 front와 rear의 위치가 배열의 마지막 인덱스인 n-1을 가리킨 후, 배열의 처음 인덱스인 0으로 이동해야 함  
 이를 위해 나머지 연산자 mod 활용
-<!-- 25페이지부터 정리 -->
+
+#### 연산
+- isEmpty: 큐가 비어있는지 확인
+공백 상태: front == rear
+```python
+def isEmpty():
+    return front == rear
+```
+- isFull: 큐가 가득 찼는지 확인
+포화 상태: (rear + 1) mod n == front(n: 배열의 크기)
+```python
+def isFull():
+    return (rear + 1) % len(Queue) == front
+```
+- enQueue: 원형 큐이므로 rear = (rear + 1) mod n을 활용
+```python
+def enQueue(item):
+    global rear
+    if isFull():
+        print("Queue is Full")
+    else:
+        rear = (rear + 1) % len(Queue)
+        Queue[rear] = item
+```
+- deQueue: 마찬가지로 원형 큐이므로 front = (front + 1) mod n을 활용
+```python
+def deQueue():
+    global front
+    if isEmpty():
+        print("Queue is Empty")
+    else:
+        front = (front + 1) % len(Queue)
+        return Queue[front]
+```
