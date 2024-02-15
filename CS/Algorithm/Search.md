@@ -9,6 +9,8 @@
 [Binary Search](#binary-search이진-탐색)  
 [KMP](#kmpknuth-morris-pratt-알고리즘)  
 [Boyer Moore](#boyer-moore보이어-무어-알고리즘)
+[Depth First Search](#dfsdepth-first-search)
+[Breadth First Search](#bfsbreadth-first-search)
 
 ### Brute Force(완전 탐색)
 - generate-and-test라고도 부름
@@ -128,20 +130,52 @@ O(M+N)
 <!-- gif 찾아서 넣어놓기 -->
 
 ### DFS(Depth First Search)
+#### 검색 과정
 1. 시작 정점의 한 방향으로 갈 수 있는 경로가 있는 곳까지 탐색
 2. 더 이상 갈 곳이 없으면 가장 마지막에 만났던 갈림길 간선이 있는 정점으로 복귀
 3. 다른 갈림길로 갈 수 있는 경로까지 탐색
 4. 앞선 과정을 반복하여 모든 정점을 방문  
 
 **가장 마지막에 만났던 갈림길의 정점으로 되돌아가야 하므로 후입선출(FILO) 구조의 스택 활용**
-#### 검색 과정
+
 ![DFS gif](https://velog.velcdn.com/images%2Fhiminhee%2Fpost%2F6a5f8969-1d9f-4df3-a5ba-33f8fa5e3ca4%2FDFS.gif)
 ```python
+def dfs(graph, start_node):
+    visit = {}
+    '''
+    보통 node의 이름은 순차적인 번호로 주어지므로, [0 for _ in range(n+1)]로 설정하기도 한다.
+    또한 list가 아니라 dict로 설정하면 in 연산에서 시간을 많이 절약할 수 있다.
+    '''
+    stack = []
+    stack.append(start_node)
+    while stack:  # stack이 비면 더는 방문할 곳이 없으므로 break
+        node = stack.pop()
+        if node not in visit:  # 방문 체크를 여기서 할 수도 있고
+            visit[node] = 0
+            stack.extend(graph[node])  # 여기서 방문 체크를 해도 상관없다. 다만 extend 말고 append같은 함수를 써야겠지
 ```
 ### BFS(Breadth First Search)
 #### 검색 과정
+1. 탐색 시작점의 인접한 정점들을 모두 차례로 방문
+2. 방문했던 정점으로 시작점으로 하여 다시 인접한 정점들을 차례로 방문
+
+**인접한 정점들에 대해 탐색한 후 차례로 진행해야 하므로 선입선출(FIFO) 구조의 큐를 활용**
+
 ![BFS gif](https://velog.velcdn.com/images%2Fhiminhee%2Fpost%2F89922593-68b6-4805-a636-53bdfd312140%2FBFS.gif)
 ```python
+def bfs(graph, start_node):
+    visit = {}
+    '''
+    보통 node의 이름은 순차적인 번호로 주어지므로, [0 for _ in range(n+1)]로 설정하기도 한다.
+    또한 list가 아니라 dict로 설정하면 in 연산에서 시간을 많이 절약할 수 있다.
+    '''
+    queue = []
+    queue.append(start_node)
+    while queue:  # queue가 비면 더는 방문할 곳이 없으므로 break
+        node = queue.pop(0)  # 이처럼 pop(0)을 할거면 queue를 만들거나 deque를 활용하자
+        if node not in visit:  # 방문 체크를 여기서 할 수도 있고
+            visit[node] = 0
+            queue.extend(graph[node])  # 여기서 방문 체크를 해도 상관없다. 다만 extend 말고 append같은 함수를 써야겠지
 ```
 
 ### 출처
