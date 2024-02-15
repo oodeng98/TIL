@@ -9,7 +9,6 @@
 자료를 선형으로 저장할 저장소 필요(배열 사용 가능)  
 top: 스택에 마지막으로 삽입된 원소의 위치
 
-#### 연산
 - push(삽입): 저장소에 자료를 저장, push라고 함
 ```python
 def push(item, size):
@@ -46,10 +45,9 @@ def pop():
 
 #### 구현
 자료를 선형으로 저장할 저장소 필요
-Front: 저장된 원소 중 첫번째 원소(혹은 삭제된 위치를 의미)
-Rear: 저장된 원소 중 마지막 원소
+front: 최근 삭제된 위치
+rear: 저장된 원소 중 마지막 원소
 
-#### 연산
 - enQueue: 큐의 rear 다음에 원소를 삽입
 ```python
 def enQueue(item):
@@ -102,7 +100,7 @@ def Qpeek():
 front와 rear의 위치가 배열의 마지막 인덱스인 n-1을 가리킨 후, 배열의 처음 인덱스인 0으로 이동해야 함  
 이를 위해 나머지 연산자 mod 활용
 
-#### 연산
+#### 구현
 - isEmpty: 큐가 비어있는지 확인
 공백 상태: front == rear
 ```python
@@ -115,6 +113,8 @@ def isEmpty():
 def isFull():
     return (rear + 1) % len(Queue) == front
 ```
+[왜 원형 큐는 한자리를 사용하지 않는가](./Circular_Queue.md)
+
 - enQueue: 원형 큐이므로 rear = (rear + 1) mod n을 활용
 ```python
 def enQueue(item):
@@ -135,3 +135,45 @@ def deQueue():
         front = (front + 1) % len(Queue)
         return Queue[front]
 ```
+
+
+### Linked Queue
+Linked List를 활용한 Queue
+- Queue의 원소: 단수 연결 리스트의 노드
+- Queue의 원소 순서: 노드의 연결 순서, 링크로 연결되어 있음
+
+#### 구현
+초기 상태: front == rear == null
+공백 상태: front == rear == null
+<!-- 추후 코드도 찾아서 추가할 것 -->
+
+
+### Deque(덱)
+양쪽 끝에서 빠르게 추가와 삭제를 수행할 수 있는 리스트류 컨테이너
+
+#### 구현
+```python
+# 추후 추가할 것
+```
+
+### Priority Queue
+우선순위를 가진 항목들을 저장하는 Queue  
+FIFO 순서가 아니라 우선순위가 높은 순서대로 나가게 된다.
+
+#### 적용 분야
+- 시뮬레이션 시스템
+- 네트워크 트래픽 제어
+- 운영체제의 테스크 스케쥴링
+
+#### 구현
+<!-- 추후 추가할 것 -->
+
+
+### Queue의 활용: Buffer(버퍼)
+
+#### 버퍼란?
+데이터를 한 곳에서 다른 한 곳으로 전송하는 동안 일시적으로 데이터를 보관하는 메모리의 영역  
+- 버퍼링: 버퍼를 활용하는 방식 또는 버퍼를 채우는 동작을 의미
+
+버퍼는 일반적으로 입출력 및 네트워크와 관련된 기능에서 이용  
+순서대로 입력/출력/전달되어야 하므로 FIFO방식의 자료구조인 Queue를 활용
