@@ -77,8 +77,9 @@ f(0, N)
 기본적으로 하나씩 확정하면서 진행하는 방식이다.  
 i 왼쪽의 값들은 이미 확정된 상태이고, 오른쪽 값들과 i번째 값을 바꿔가면서 순열을 완성해간다.  
 [yield란?](/Python/Python.md#yield-키워드)
+
 ```python
-# itertools.combinations를 가져옴
+# itertools.permutations를 가져옴
 def permutations(iterable, r=None):
     # permutations('ABCD', 2) --> AB AC AD BA BC BD CA CB CD DA DB DC
     # permutations(range(3)) --> 012 021 102 120 201 210
@@ -94,7 +95,7 @@ def permutations(iterable, r=None):
         return  # 불가능
     indices = list(range(n))  # [0, 1, ..., n-1]
     cycles = list(range(n, n-r, -1))  # [n, n-1, ..., n-r+1]
-    # 여기서 cycles의 값인 [n, n-1, n-r+1]을 모두 곱하면 순열의 총 개수와 같다는 사실을 인지하고 넘어가자
+    # 여기서 cycles의 값인 [n, n-1, ..., n-r+1]을 모두 곱하면 순열의 총 개수와 같다는 사실을 인지하고 넘어가자
     yield tuple(pool[i] for i in indices[:r])  # 첫번째로 (0, 1, ..., r) 반환
     while n:
         for i in reversed(range(r)):  # (r-1, r-2, ..., 0)
@@ -129,50 +130,91 @@ def permutations(iterable, r=None):
 ```
 
 #### 필자의 이해 및 설명
+```python
+yield tuple(pool[i] for i in indices[:r])  # 첫번째로 (0, 1, ..., r) 반환
+while n:
+    for i in reversed(range(r)):  # (r-1, r-2, ..., 0)
+```
 세세한 부분들에 대한 설명은 넘어가고, 첫 yield가 나오는 부분부터 설명하겠다.  
-yield 반환하는 값의 형태 모두 아래와 같다.  
-```python
-tuple(pool[i] for i in indices[:r])
-```
-이는 indices에서 앞선 r개의 원소만 볼 것이고, 해당 원소들이 각각 pool의 index를 의미한다는 뜻이다.  
-아래로 내려가서 while n은 iterable의 길이가 0이 아니면 계속 실행하게 만들고,   
-```python
-for i in reversed(range(r))
-```
-로 인해 i는 (r-1, r-2, ..., 0)의 값을 순차적으로 가진다.  
-그로 인해 i는 cycles의 뒷 값부터 건드리게 된다.  
+permutations 함수에서 yield로 반환하는 값의 형태는 모두 위와 동일하다.  
+이는 indices에서 앞선 r개의 원소만 볼 것이고, 해당 원소들이 각각 입력한 iterable의 index를 의미한다는 뜻이다.  
 
-반복문이 시작되면 일단 아래 코드가 우선적으로 실행된다.
-```python
-cycles[i] -= 1
-```
-그리고 if else 구문에서 cycles[i]의 값이 0일때와 0이 아닐 때가 구분되는데, 우선 else의 조건인 0이 아닐 때 부터 보겠다.  
+바로 밑 줄의 내려가서 while n은 iterable의 길이가 0이 아니면 계속 실행하게 만들고,   
+for문으로 인해 i는 (r-1, r-2, ..., 0)의 값을 순차적으로 가진다.  
+그로 인해 i는 cycles의 뒷 값부터 건드리게 되는데, 이 부분은 지금 이해할 필요 없고 내려가보자.  
 
-보기 편하게 j에 cycles[i]의 값을 대입,
-indices[i]와 indices[j]의 자리를 바꿔준 후 yield로 값을 반환한다.  
+```python
+for i in reversed(range(r)):  # (r-1, r-2, ..., 0)
+    cycles[i] -= 1
+    if cycles[i] == 0:  # 만약 cycles[i]가 0이 되었다면
+        ...
+    else:
+        ...
+```
+반복문이 시작되면 일단 cycles[i]의 값을 1 감소시키는 코드가 우선적으로 실행된다.  
+그리고 if else 구문에서 cycles[i]의 값이 0일때와 0이 아닐 때를 구분하는데, 우선 else의 조건인 cycles[i]가 0이 아닐 때 부터 보겠다.  
+```python
+else:  # cycles[i] == 0이 될 때 까지 아래 코드 수행
+    j = cycles[i]  # j의 값은 점차 작아짐
+    indices[i], indices[-j] = indices[-j], indices[i]
+    '''
+    indices[-j]가 가리키는 값은 오른쪽으로 한칸씩 계속 이동
+    why? j = cycles[i]이고 cycles[i]는 매 반복문마다 -=1되기 때문
+    그렇다면 indices[i]가 가리키는 값이 오른쪽으로 한칸씩 이동한다
+    => 1씩 값이 증가한다.
+    '''
+    yield tuple(pool[i] for i in indices[:r])  # 모든 yield의 형태는 이와 같고, 이는 indices에서 앞선 r개의 원소만 본다는 뜻
+    break
+```
+우선 보기 편하게 j에 cycles[i]의 값을 대입해준다.*(내가 한거 아님, 원래 코드가 저럼)*  
+그리고 indices[i]와 indices[j]의 자리를 바꿔준 후 yield로 값을 반환한다.  
 이때 중요한 것은 마지막에 존재하는 break이다.  
-cycles[i]가 0이 아닌 이상 반복문은 깨지고 다시 시작되므로 i는 r-1 잠시 고정된다.  
-그렇다면 cycles[i]라는 바뀌는 자리는 고정이고, j는 반복문이 깨졌다가 시작할 때 마다 1씩 감소하므로 cycles[-j]는 점차 오른쪽을 가리키게 된다.  
+cycles[i]가 0이 아닌 이상 반복문은 깨지고 다시 시작되므로 i는 반복문이 시행되고 처음으로 정해지는 값인 r-1이 유지된다.  
+즉, i의 값이 잠시 유지되므로 cycles[i]라는 바뀌는 자리도 유지되고, j는 반복문이 깨졌다가 시작할 때 마다 1씩 감소하므로 cycles[-j]는 점차 오른쪽을 가리키게 된다.  
 
-이 과정을 r에 2를 대입한 코드의 결과를 보면서 이해해보자.
+이 과정을 r에 2를 대입한 코드의 결과를 보면서 이해해보자.  
+
 |indices|cycles|j|description|
 |---------------|------|-|------------------------------|
 |[0, 1, 2, 3, 4]|[5, 4]|-||
 |[0, 2, 1, 3, 4]|[5, 3]|3||
 |[0, 3, 1, 2, 4]|[5, 2]|2|아래 부분까지 cycles의 마지막 값이 점차 감소하는 것을 확인할 수 있다.|
-|[0, 4, 1, 2, 3]|[5, 1]|1|그로 인해 indices[i]값이 점차 증가하는 것을 확인할 수 있다.|
+|[0, 4, 1, 2, 3]|[5, 1]|1|그로 인해 indices[i]값이 점차 큰 값과 바뀌는 것을 확인할 수 있다.|
 
 이 위치에서 cycles의 마지막 값이 0이 되고, 처음으로 반복문이 깨지지 않고 돌아가게 된다.  
-이 과정에서 처음으로 if문의 코드가 수행되게 되고 아래처럼 초기 값으로 원상복귀한다.
+이 과정에서 처음으로 if문의 코드가 수행된다.
+```python
+if cycles[i] == 0:  # 만약 cycles[i]가 0이 되었다면
+    indices[i:] = indices[i+1:] + indices[i:i+1]  # indices 원상복귀
+    # indices = list(range(n))를 사용해도 결과는 동일하나 시간이 더 들긴 할 듯
+    '''
+    cycles[i]가 0이 되었다면 가장 최근까지 cycles[i]의 값은 1을 가리키고
+    그렇다면 j는 -1이었으므로 indices[i]가 가리키는 값은 indices에서 가장 오른쪽 값인 indices[-1]이다.
+    그래서 indices[i+1:]의 값 오른쪽에 indices[i]의 값인 indices[i:i+1]를 넣어서 indices를 원상복구 시키는것
+    '''
+    cycles[i] = n - i  # cycles[i] 또한 원상복귀
+    '''
+    cycles = [n, n-1, n-2, ..., n-(r-1)]
+    현재 i는 r-1에서 cycles에 존재하는 0의 개수를 뺀 값
+    왜냐? i의 값이 감소하려면(반복문이 break 되지 않고 돌려면) 뒤에 있는 cycles[i]의 값이 전부 0이어야 하기 때문
+    '''
+```
+indices의 값과 cycles의 값이 원상복귀되는데, 이는 주석을 보면 알 수 있을 것이라 생각한다.  
+아래 표는 해당 값들을 나타낸다.  
+
 |indices|cycles|
 |---------------|------|
 |[0, 1, 2, 3, 4]|[5, 4]|
 
-그리고 반복문이 수행되어 i가 가리키는 값이 1 줄어들고, 이후 cycles[i]는 지금까지와 달리 cycles의 왼쪽 값을 건드리게 된다.  
+
+```python
+for i in reversed(range(r)):  # (r-1, r-2, ..., 0)
+    cycles[i] -= 1
+```
+그리고 반복문이 수행되어 i가 가리키는 값이 1 줄어들고, 이후 cycles[i]는 지금까지 건드리던 값의 바로 왼쪽 값을 건드리게 된다.  
 이제 cycles가 [4, 4]가 되고, 이젠 0이 아니므로 else구문으로 들어간다.  
-그 과정에서 indices에서 i가 가리키는 값인 좌측 값이 처음으로 변화하게 된다.  
-그래서 indices의 첫번째 값이 1로 변하고, 반복문이 break된다.  
-이제 많이 본 과정을 볼 수 있다. 아래 표를 확인해보자.
+아까 i의 값이 1 줄어들었으므로 indices에서 i가 가리키는 값인 좌측 값이 처음으로 변화하게 된다.  
+그래서 indices의 첫번째 값이 1로 변하고, 반복문이 break되며 우리가 알던 과정을 반복하게 된다.  
 
 |indices|cycles|j|description|
 |---------------|------|-|------------------------------|
@@ -228,5 +270,5 @@ def combinations(iterable, r):
 
 ### 출처
 
-[Math Warehouse](https://www.mathwarehouse.com/programming/gifs/binary-vs-linear-search.php)
+[Math Warehouse](https://www.mathwarehouse.com/programming/gifs/binary-vs-linear-search.php)  
 [itertools](https://docs.python.org/ko/3/library/itertools.html#module-itertools)
