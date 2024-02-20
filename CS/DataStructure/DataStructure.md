@@ -1,5 +1,10 @@
 # Data Structure
 
+[stack](#stack)
+[queue](#queuelinear)
+[tree](#tree)
+
+
 ### Stack
 물건을 쌓아 올리듯 자료를 쌓아 올린 형태의 자료구조
 - 스택에 저장된 자료는 선형 구조를 가짐
@@ -177,3 +182,99 @@ FIFO 순서가 아니라 우선순위가 높은 순서대로 나가게 된다.
 
 버퍼는 일반적으로 입출력 및 네트워크와 관련된 기능에서 이용  
 순서대로 입력/출력/전달되어야 하므로 FIFO방식의 자료구조인 Queue를 활용
+
+
+### Tree
+비선형 구조  
+원소들 간에 1:n 관계를 가지는 자료구조  
+원소들 간에 계층 관계를 가지는 계층형 자료구조  
+
+#### 용어 정리
+Root node: 노드 중 최상위 노드, 트리의 시작 노드  
+node: 트리의 원소  
+edge(간선): 노드를 연결하는 선  
+sibling node: 같은 부모 노드의 자식 노드들  
+parent nodes: 간선을 따라 루트 노드까지 이르는 경로에 있는 모든 노드들  
+subtree: 부모 노드와 연결된 간선을 끊었을 때 생성되는 트리  
+자손 노드: 서브 트리에 있는 하위 레벨의 노드들  
+degree(차수): 노드에 연결된 자식 노드의 수  
+트리의 차수: 트리에 있는 노드의 차수 중에서 가장 큰 값  
+(Leaf node)단말 노드: 차수가 0인 노드, 자식 노드가 없는 노드  
+높이: 루트에서 노드에 이르는 간선의 수, 레벨이라고도 함  
+트리의 높이: 트리에 있는 노드의 높이 중 가장 큰 값, 최대 레벨이라고도 함  
+
+#### Binary Tree(이진 트리)
+모든 노드들이 2개의 서브트리를 갖는 형태의 트리  
+각 노드가 자식 노드를 최대 2개까지만 가질 수 있음  
+
+##### 구현
+이진 트리의 각 노드 번호를 아래와 같이 부여
+![binary tree numbering](binary_tree_numbering.png)
+
+노드 번호가 i인 노드 기준  
+부모 노드의 번호: i // 2  
+왼쪽 자식 노드의 번호: i * 2  
+오른쪽 자식 노드의 번호: i * 2 + 1  
+레벨 n의 노드 시작 번호: 2 ** n  
+-> 하나의 배열로 트리를 구현할 수 있음  
+
+- 부모 번호의 인덱스로 자식 번호를 저장
+```python
+# 나중에 구현할 것
+```
+- 자식 번호를 인덱스로 부모 번호를 저장
+```python
+# 나중에 구현할 것
+```
+단점
+- 사용하지 않는 배열 원소에 대한 메모리 공간 낭비
+- 트리의 중간에 새로운 노드를 삽입하거나 기존의 노드를 삭제할 경우 배열의 크기 변경이 어려움  
+-> 연결 리스트를 활용한 이진 트리 구현
+
+##### Full Binary Tree(포화 이진 트리)
+모든 레벨에 노드가 포화상태로 차 있는 이진 트리  
+높이가 h일 때, 최대의 노드 개수인 2^(h+1) - 1의 노드를 가진 이진 트리  
+
+##### Complete Binary Tree(완전 이진 트리)
+높이가 h이고 노드 수가 n개일 때 포화 이진 트리의 노드 번호 1번부터 n번까지 빈 자리가 없는 이진 트리  
+![complete binary tree](complete_binary_tree.png)
+
+- 파이썬에서 자주 활용하는 heap이 완전 이진 트리의 대표적인 예시
+```python
+from heapq import heapq
+#  heapq 코드 뜯어서 확인해볼 것
+```
+
+##### Skewed Binary Tree(편향 이진 트리)
+높이 h에 대한 최소 개수의 노드를 가지면서 한쪽 방향의 자식 노드만들 가진 이진 트리  
+![skewed binary tree](skewed_binary_tree.png)
+
+
+#### Traversal(순회)
+Traversal(순회): 트리의 노드들을 체계적으로 방문하는 것  
+전위, 중위, 후위는 부모 노드의 방문 순서와 관련있음  
+*코드에서 visit의 위치를 보면 도움이 될 지도*  
+- preorder(전위 순회): 부모 노드 방문 후, 자식 노드를 좌우 순서로 방문
+```python
+def preorder(node):
+    if node:
+        visit(t)  # 방문 체크
+        preorder(node.left)
+        preorder(node.right)
+```
+- inorder(중위 순회): 좌측 자식노드, 부모 노드, 우측 자식 노드 순서로 방문
+```python
+def inorder(node):
+    if node:
+        inorder(node.left)
+        visit(t)  # 방문 체크
+        inorder(node.right)
+```
+- postorder(후위 순회): 자식 노드를 좌우 순서로 방문 후, 부모 노드를 방문
+```python
+def postorder(node):
+    if node:
+        postorder(node.left)
+        postorder(node.right)
+        visit(t)  # 방문 체크
+```
