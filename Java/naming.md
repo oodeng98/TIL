@@ -9,7 +9,7 @@
   - lowerCamelCase: 맨 앞글자가 소문자
   - UpperCamelCase: 맨 앞글자가 대문자
   - Ex) sockBind, MsgBoxBtn
-  - 어떤 문서에서는 lowerCamelCase를 그냥 camelCase로, UpperCamelCase를 PascalCase로 지칭하기도 한다.
+  - 어떤 문서에서는 lowerCamelCase를 그냥 camelCase로, UpperCamelCase를 **PascalCase**로 지칭하기도 한다.
 
 ### snake_case
 - 단어가 합쳐진 부분마다 언더라인(_)을 붙여 주는 방법
