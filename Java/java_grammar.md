@@ -228,3 +228,110 @@ int [][] arr = {
 };
 ```
 위와 같이 생성해도 상관없다.
+
+
+### Class 생성
+클래스를 만들기 위해서는 우클릭 > new > class  
+public class 클래스명 {}  
+클래스명은 [PascalCase](./naming.md#camelcase)를 따름
+```java
+public class Person{
+  String name;
+  int age;
+  String hobby;
+}
+```
+```java
+public class PersonTest{
+  Person jung = new Person();
+  jung.name = "Jung";
+  jung.age = 27;
+  jung.hobby = "Youtube";
+}
+```
+
+### method 생성
+함수란 특정한 작업을 수행하는 문장들을 한 단위로 묶은 것으로, 자바에서는 메서드(클래스 안에 정의된 함수)로 사용
+```java
+반환형 함수명(매개변수1, 매개변수2...){
+  문장1;
+  문장2;
+  return 반환값;
+}
+public static void main(String[] args){
+  System.out.println("이것은 첫번째고");
+  System.out.println("이것은 두번째");
+}
+```
+
+### 제어자
+클래스와 클래스 멤버 선언 시 사용하여 부가적인 의미를 부여하는 키워드  
+기타 제어자는 경우에 따라 여러 개를 함께 사용할 수 있지만, 접근 제어자는 2개 이상 사용할 수 없다.
+
+#### 접근 제어자
+1. private
+- 선언된 클래스 멤버는 외부에 공개되지 않으며, 외부에서 직접 접근할 수 없음
+- 즉, 해당 객체의 public method를 통해서만 접근할 수 있음
+- 클래스 내부의 세부적인 동작을 구현하는 데 사용
+![private](https://www.tcpschool.com/lectures/img_java_access_private.png)
+```java
+public class SameClass{
+  private String var = "같은 클래스만 허용"; // private 필드
+  private String getVar(){
+    return this.var;
+  } // private method
+}
+```
+2. public
+- 선언된 클래스 멤버는 외부에 공개되며, 해당 객체를 사용하는 프로그램 어디에서나 접근 가능
+- 앞서 말했듯 public method를 통해서만 해당 객체의 private 멤버에 접근할 수 있으므로, public method는 private 멤버와 프로그램 사이의 인터페이스 역할을 수행한다고 볼 수 있음
+![public](https://www.tcpschool.com/lectures/img_java_access_public.png)
+```java
+public class EveryWhere{
+  public String var = "누구든지 허용"; // public 필드
+  public String getVar(){
+    return this.var;
+  } // public method
+}
+```
+3. default
+- java는 클래스 및 클래스 멤버의 접근 제어 기본값으로 default 접근 제어를 별도로 명시하고 있음
+- default를 위한 접근 제어자는 따로 존재하지 않고, 접근 제어자가 지정되지 않으면 자동적으로 default 접근 제어를 가지게 됨
+- default 접근 제어를 가지는 멤버는 같은 클래스의 멤버와 같은 패키지에 속하는 멤버에서만 접근 가능
+![default](https://www.tcpschool.com/lectures/img_java_access_default.png)
+```java
+public class SamePackage{
+  String sameVar = "같은 패키지는 허용"; // default 필드
+}
+```
+4. protected
+- 부모 클래스에 대해서는 public 멤버처럼 취급되며, 외부에서는 private 멤버처럼 취급
+클래스의 protected 멤버에 접근할 수 있는 영역
+1. 이 멤버를 선언한 클래스의 멤버
+2. 이 멤버를 선언한 클래스가 속한 패키지의 멤버
+3. 이 멤버를 선언한 클래스를 상속받은 자식 클래스의 멤버
+![protected](https://www.tcpschool.com/lectures/img_java_access_protected.png)
+```java
+package test;
+
+public class SameClass{
+  protected String sameVar = "다른 패키지에 속하는 자식 클래스까지 허용"; // protected 필드
+}
+```
+```java
+package test.other;
+import test.SameClass; // test 패키지의 SameClass 클래스를 포함시킴
+
+public class ChildClass extends SameClass{
+  public static void main(String[] args){
+    SameClass sp = new SameClass();
+    System.out.println(sp.sameVar) // 다른 패키지에 속하는 자식 클래스까지 허용
+  }
+}
+```
+
+#### 기타 제어자
+
+
+### 출처
+[TCP SCHOOL](https://www.tcpschool.com/java/java_modifier_accessModifier)  
