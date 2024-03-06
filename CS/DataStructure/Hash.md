@@ -41,6 +41,7 @@ Defect|Flaw
 Huge|Tremendous
 |hydrogen|not find|
 
+## 구현
 ```python
 hash = {}
 
