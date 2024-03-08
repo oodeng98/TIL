@@ -23,6 +23,7 @@ Set 에 있는 모든 원소를 오름차순으로 출력하라.
 2 50
 1 10|10 40 60 70 80
 
+## 구현
 ```java
 import java.util.Scanner;
 
