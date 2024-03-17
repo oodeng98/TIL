@@ -10,13 +10,7 @@ Cascading Style Sheet
 2. Internal style sheet
 3. External style sheet
 ```html
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
   <style>
     h2 {
         color: red;
@@ -43,9 +37,9 @@ CSS Selector의 종류
     - HTML 모든 요소를 선택
   - 요소 선택자
     - 지정한 모든 태그를 선택
-  - 클래스 선택자
+  - 클래스 선택자('.')
     - 주어진 클래스 속성을 가진 모든 요소를 선택
-  - 아이디 선택자
+  - 아이디 선택자('#')
     - 주어진 아이디 속성을 가진 요소를 선택
     - 문서에는 주어진 아이디를 가진 요소가 하나만 있어야 함
   - 속성 선택자 등
@@ -53,22 +47,15 @@ CSS Selector의 종류
   - 자손 결합자(" "(space))
     - 첫번째 요소의 자손 요소들 선택
     ```html
-    p span은 <p>안에 있는 모든 <span>을 선택(하위 레벨 상관 없이)
+    p span -> <p>안에 있는 모든 <span>을 선택(하위 레벨 상관 없이)
     ```
   - 자식 결합자
     - 첫번째 요소의 직계 자식만 선택
     ```html
-    ul > li는 <ul>안에 있는 모든 <li>를 선택(한단계 아래 자식들만)
+    ul > li -> <ul>한 단계 아래에 있는 모든 <li>를 선택
     ```
 ```html
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
   <style>
     * {
         color: red;
@@ -81,16 +68,16 @@ CSS Selector의 종류
     h4 {
         color: blue;
     }
-    /* 클래스 선택자 */
+    /* 클래스 선택자 . */
     .green {
         /* .이 html의 클래스 속성을 의미 */
         color: green;
     }
-    /* id 선택자 */
+    /* id 선택자 # */
     #purple {
         color: purple;
     }
-    /* 자식 결합자 */
+    /* 자식 결합자 > */
     .green > span {
         font-size: 50px;
     }
@@ -120,8 +107,6 @@ CSS Selector의 종류
   </ul>
   <p class="green">Lorem, <span>ipsum</span> dolor.</p>
 </body>
-
-</html>
 ```
 
 ## Specificity
@@ -132,15 +117,14 @@ CSS Selector에 가중치를 계산하여 어떤 스타일을 적용할지 결�
 만약 한 요소에 동일한 가중치를 가진 선택자가 적용될 때 CSS에서 마지막에 나오는 선언이 적용  
 
 - 명시도가 높은 순서
-1. Importance
-  - !important
+1. Importance(!important)
 2. Inline 스타일
 3. 선택자
   - id 선택자 > class 선택자 > 요소 선택자
 4. 소스 코드 선언 순서
 
 ### 명시도 관련 문서
-[그림으로 보는 명시도](https://specifishity.com/)
+[그림으로 보는 명시도](https://specifishity.com/)  
 [명시도 계산기](https://specificity.keegan.st)
 
 ## 상속
