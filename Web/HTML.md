@@ -59,15 +59,18 @@ Markup Language
 ```
 - Anchor를 의미
 ```html
-<br><br>
+<br>
 ```
 - 줄넘김을 의미
-
+```html
+<hr>
+```
+- 선을 그어줌
 ### HTML Element(요소)
 ```html
 <p>My cat is very grumpy</p>
 tag        content       tag
-E    L   E   M   E   N    T           
+ E   L   E   M   E   N   T
 ```
 하나의 요소는 여는 태그와 닫는 태그, 그 안의 내용으로 구성됨  
 닫는 태그는 태그 이름 앞에 /가 포함되며 닫는 태그가 없는 태그도 존재
