@@ -115,11 +115,9 @@ for i in range(N-1):
 ```python
 def quickSort(a, begin, end):
     if begin < end:
-        print(a, a[begin])  # 정렬 현황과 pivot의 값을 표현
         p = partition(a, begin, end)
         quickSort(a, begin, p - 1)
         quickSort(a, p + 1, end)
-        
 
 
 def partition(a, begin, end):
@@ -127,15 +125,13 @@ def partition(a, begin, end):
     pivot = begin # pivot의 위치는 대부분 begin으로 잡는듯
     l = begin
     r = end
-    while l < r:
-        while l < r and a[l] < a[pivot]:
+    while l <= r:
+        while l <= r and a[l] < a[pivot]:
             l += 1  # l보다 왼쪽에 있는 값은 모두 a[pivot]보다 작음
-        while l < r and a[pivot] <= a[r]:
+        while l <= r and a[pivot] <= a[r]:
             r -= 1  # l보다 오른쪽에 있는 값은 모두 a[pivot]보다 큼
             # a[pivot]과 a[r]의 값이 같아도 r-=1이 실행되므로 l == r이 될 수 있음
         if l < r:  # 아직도 r이 l보다 오른쪽에 있으면?
-            if l == pivot:  # 아직 정렬이 안되었는데 l이 pivot에 도달했다면?
-                pivot = r  # pivot을 좀 더 오른쪽으로 옮겨줌
             a[l], a[r] = a[r], a[l]  # a[r] <= a[pivot] <= a[l]인 상태이므로 변경
     a[pivot], a[r] = a[r], a[pivot]
     # 현재 l == r, pivot = l + 1인 상태, l + 1 == r이 되도록 변경
@@ -146,7 +142,17 @@ quickSort(lst, 0, len(lst) - 1)
 ```
 
 ### Merge Sort(합병 정렬)
+여러 개의 정렬된 자료의 집합을 병합하여 한 개의 정렬된 집합으로 만드는 방식
 
+#### 정렬 과정
+1. 자료를 최소 단위의 문제까지 나눔
+2. 차례대로 정렬
+
+```python
+def merge_sort()
+
+def merge()
+```
 
 ### 출처
 
