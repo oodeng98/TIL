@@ -11,7 +11,7 @@
   - 무방향 가중치 그래프에서 신장 트리를 구성하는 간선들의 가중치의 합이 최소인 신장 트리
 
 ### Prim
-하나의 정점에서 연결된 간선들 중에서 하나씩 선택하면서 MST를 만들어 가는 방식
+하나의 정점에서 연결된 간선들 중에서 하나씩 선택하면서 MST를 만들어 가는 방식(최적 해를 보장할 수 없음)
 1. 임의 정점을 하나 선택해서 시작
 2. 선택한 정점과 인접하는 정점들 중의 최소 비용의 간선이 존재하는 정점을 선택
 3. 모든 정점이 선택될 때 까지 반복
@@ -20,8 +20,9 @@
 - tree vertices: MST를 만들기 위해 선택된 정점들
 - nontree vertices: 선택되지 않은 정점들
 
+![prim gif](https://s3.stackabuse.com/media/articles/graphs-in-python-minimum-spanning-trees-prims-algorithm-8.gif)
 ```python
-import heapq
+from heapq import heappush, heappop
 
 
 def prim(start):
@@ -30,14 +31,20 @@ def prim(start):
     sum_weight = 0
     heap.heapq(heap, (0, start))
     while heap:
-        weight, frm = heap.heappop()
-        sum_weight += weight
-        visited[frm] = True
-        for to in range(V):
-            if graph[frm][to] != 0 and not MST[to]:
-                heappush(pq, (graph[frm][to], to))
+        weight, start = heap.heappop()  # 방문 가능한 간선 중 가중치가 가장 낮은 간선 찾고
+        if visited[start]:  # 이미 방문한 노드라면
+            continue
+        visited[start] = True  # 방문 기록
+        sum_weight += weight  # 총 가중치 갱신
+        for end in range(V):  # 모든 노드들 중
+            if graph[start][end] == 0:  # 현재 노드와 연결되어 있지 않으면
+                continue
+            if visited[end]:  # 방문한 적이 있으면
+                continue
+            heappush(pq, (graph[start][end], end))
 
     print(f"최소 비용: {sum_weight}")
+
 ```
 
 ### KRUSKAL
@@ -47,7 +54,7 @@ def prim(start):
   - 사이클이 존재하면 다음으로 가중치가 낮은 간선 선택
 3. n-1개의 간선이 선택될 때 까지 2번 반복
 
-
+![kruskal gif](https://s3.stackabuse.com/media/articles/graphs-in-python-minimum-spanning-trees-kruskals-algorithm-6.gif)
 ```python
 import sys
 
@@ -90,6 +97,16 @@ for t in range(1, T+1):
     parents = [i for i in range(V+1)]
     print(f"#{t} {kruskal()}")
 ```
+
+#### Kruskal 알고리즘은 최적의 해를 도출하는가?
+일반적인 Greedy algorithm의 정당성을 증명하는 방식으로 증명 가능  
+최소 스패닝 트리를 T라고 하고, 크루스칼 알고리즘으로 구현했을 때 포함되는 간선이 최소 스패닝 트리 T에는 포함되어 있지 않다고 가정  
+만약 크루스칼 알고리즘이 선택한 간선이 정점 u와 v를 연결한다고 하면, T는 해당 간선이 아닌 다른 어떠한 경로로 u와 v를 연결하고 있다.  
+이 경로에 포함된 간선 중 하나는 분명히 크루스칼이 선택한 이 간선의 가중치 보다 크다.  
+그렇지 않으면 해당 경로를 구성하는 간선들이 크루스칼 알고리즘에 의해 이전에 모두 선택되어 이미 u와 v를 연결하는 경로가 존재한다는 모순에 빠진다.  
+
+만약 지금 선택된 간선보다 큰 가중치를 가지는 놈을 제거하고 크루스칼이 현재 선택한 간선으로 대체를 한다해도 T가 이미 최소 스패닝 트리이기 때문에 스패닝 트리임을 증명할 수 있다.  
+출처: 구종만, 프로그래밍 대회에서 배우는 알고리즘 문제 해결 전략
 
 ## 최단 경로
 간선의 가중치가 있는 그래프에서 두 정점 사이의 경로들 중에 간선의 가중치의 합이 최소인 경로
@@ -138,5 +155,20 @@ for _ in range(E):
 ```
 
 ### Bellman-Ford
+특정 출발 노드에서 다른 모든 노드까지의 최단 경로 탐색  
+음의 가중치 간선을 허용  
+전체 그래프에서 음수 사이클의 존재 여부 판단 가능  
+시간 복잡도: O(VE) (V: node 수, E: edge 수)
+1. 출발 노드를 설정
+2. 최단 거리 테이블 초기화
+3. 다음와 과정을 노드의 개수 -1번 반복
+  1. 전체 간선을 하나씩 확인
+  2. 각 간선을 거쳐 다른 노드로 가는 비용을 계산하여 최단 거리 테이블 갱신
+    - 출발 노드가 방문한 적 없는 노드일 때 값을 갱신하지 않음
+    - 출발 노드의 누적 거리값 + edge 가중치 < 종료 노드의 누적 거리값이면 종료 노드의 누적 거리값 갱신
+4. 만약 음수 사이클의 존재 여부를 확인하고 싶다면 3번의 과정을 1번 더 수행
+- 만약 최단 거리 테이블이 갱신된다면 음수 사이클이 존재하는 것
+
+출처: [mjieun.log](https://velog.io/@mjieun/Algorithm-%EB%B2%A8%EB%A7%8C-%ED%8F%AC%EB%93%9C-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98Bellman-Ford-algorithm-Python)
 
 ### Floyd-Warshall
