@@ -103,24 +103,20 @@ for s, e, w in edges:
 from heapq import heappush, heappop
 
 
-def dijkstra(start):
+def dijkstra():
     heap = []
-    heappush(heap, (0, start))
-    distance[start] = 0
-
-    while heap:                                         
-        dist, now = heappop(heap)
-        if distance[now] < dist:
+    heappush(heap, 0)
+    distance[0] = 0
+    while heap:
+        now = heappop(heap)
+        if now not in graph:
             continue
-        for to in graph[now]:
-            next_dist = to[0]
-            next_node = to[1]
-
-            new_dist = next_dist, next_dist + dist
+        for next_node in graph[now]:
+            new_dist = distance[now] + graph[now][next_node]
             if distance[next_node] <= new_dist:
                 continue
             distance[next_node] = new_dist
-            heappush(heap, (next_dist, next_node))
+            heappush(heap, next_node)
 
 V, E = map(int, input().split())
 start = 0
