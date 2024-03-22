@@ -119,42 +119,50 @@ for t in range(1, T+1):
   - floyd-warshall 알고리즘
 
 ### Dijkstra
+특정 출발 노드에서 다른 모든 노드까지의 최단 경로 탐색  
 시작 정점에서 거리가 최소인 정점을 선택해 나가면서 최단 경로를 구하는 방식  
 시작 정점에서 끝 정점까지의 최단 경로에 정점 x가 존재  
 이때, 최단경로는 s에서 x까지의 최단 경로와 x에서 t까지의 최단 경로로 구성된다.  
 ![dijkstra](https://memgraph.com/images/blog/graph-search-algorithms-developers-guide/dijkstra.gif)
 
 ```python
+import sys
 from heapq import heappush, heappop
 
 
-def dijkstra(start):
+def dijkstra(start, end):
     heap = []
-    heappush(heap, start)
+    heappush(heap, (0, start))
+    distance = [float('inf') for _ in range(N+1)]
     distance[start] = 0
     while heap:
-        now = heappop(heap)
+        weight, now = heappop(heap)
         if now not in graph:
             continue
+        if distance[now] < weight:
+            continue
         for next_node in graph[now]:
-            new_dist = distance[now] + graph[now][next_node]
+            new_dist = weight + graph[now][next_node]
             if distance[next_node] <= new_dist:
                 continue
             distance[next_node] = new_dist
-            heappush(heap, next_node)
+            heappush(heap, (distance[next_node], next_node))
+    return distance[end]
 
-V, E = map(int, input().split())
 
+N, M, X = map(int, input().split())
 graph = {}
-distance = [float('inf')] * V
-
-for _ in range(E):
-    s, e, w = map(int, input().split())
-    if s in graph:
-        graph[s][e] = w
+for _ in range(M):
+    x, y, c = map(int, input().split())
+    if x in graph:
+        graph[x][y] = c
     else:
-        graph[s] = {e: w}
+        graph[x] = {y: c}
 ```
+
+*어차피 heap을 다 돌 때 까지 반복하는데 왜 heap 자료구조를 사용해야 하는가?*  
+*heap에 (weight, node)의 형태로 삽입하는 것이 아니라 node를 queue에 집어넣는 형식으로도 다익스트라 구현은 가능하다.*  
+*하지만 그렇게 구현한 경우 이미 방문한 노드를 다시 방문해서 갱신하는 경우가 더 많아지기 때문에 heap에 가중치를 넣어서 반복을 최소화하는 것.*
 
 ### Bellman-Ford
 특정 출발 노드에서 다른 모든 노드까지의 최단 경로 탐색  
