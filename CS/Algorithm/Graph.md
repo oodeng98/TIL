@@ -122,16 +122,16 @@ for t in range(1, T+1):
 시작 정점에서 거리가 최소인 정점을 선택해 나가면서 최단 경로를 구하는 방식  
 시작 정점에서 끝 정점까지의 최단 경로에 정점 x가 존재  
 이때, 최단경로는 s에서 x까지의 최단 경로와 x에서 t까지의 최단 경로로 구성된다.  
-
+![dijkstra](https://memgraph.com/images/blog/graph-search-algorithms-developers-guide/dijkstra.gif)
 
 ```python
 from heapq import heappush, heappop
 
 
-def dijkstra():
+def dijkstra(start):
     heap = []
-    heappush(heap, 0)
-    distance[0] = 0
+    heappush(heap, start)
+    distance[start] = 0
     while heap:
         now = heappop(heap)
         if now not in graph:
@@ -144,14 +144,16 @@ def dijkstra():
             heappush(heap, next_node)
 
 V, E = map(int, input().split())
-start = 0
 
-graph = [[] for _ in range(V)]
+graph = {}
 distance = [float('inf')] * V
 
 for _ in range(E):
     s, e, w = map(int, input().split())
-    graph[s].append((w, e))
+    if s in graph:
+        graph[s][e] = w
+    else:
+        graph[s] = {e: w}
 ```
 
 ### Bellman-Ford
@@ -167,8 +169,59 @@ for _ in range(E):
     - 출발 노드가 방문한 적 없는 노드일 때 값을 갱신하지 않음
     - 출발 노드의 누적 거리값 + edge 가중치 < 종료 노드의 누적 거리값이면 종료 노드의 누적 거리값 갱신
 4. 만약 음수 사이클의 존재 여부를 확인하고 싶다면 3번의 과정을 1번 더 수행
-- 만약 최단 거리 테이블이 갱신된다면 음수 사이클이 존재하는 것
+- 만약 최단 거리 테이블이 갱신된다면 음수 사이클이 존재하는 것  
 
-출처: [mjieun.log](https://velog.io/@mjieun/Algorithm-%EB%B2%A8%EB%A7%8C-%ED%8F%AC%EB%93%9C-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98Bellman-Ford-algorithm-Python)
+*기본적인 개념은 dijkstra와 비슷하나 다른 모든 노드까지의 경로를 탐색해야 하기 때문에 연산 과정이 더 길어진 듯*
+![bellman_ford](https://memgraph.com/images/blog/graph-search-algorithms-developers-guide/bellman-ford.gif)
+```python
+V, E = map(int, input().split())
+edges = []
+distance = [float('inf')] * (V + 1)
+
+for _ in range(E):
+    s, e, w = map(int, input().split())
+    edges.append((s, e, w))
+
+def bellman_ford(start):
+    distance[start] = 0
+    for i in range(V):
+        # 매 반복마다 모든 간선 확인
+        for j in range(E):
+            cur_node = edges[j][0]
+            next_node = edges[j][1]
+            weight = edges[j][2]
+            # 현재 간선을 거쳐서 다른 노드로 이동하는 거리가 더 짧은 경우 갱신
+            if distance[cur_node] != float('inf') and distance[cur_node] + weight < distance[next_node]:
+                distance[next_node] = distance[cur_node] + weight
+                # n번째 라운드에서도 값이 갱신된다면 음수 순환이 존재
+                if i == V - 1:
+                    return True
+    return False
+```
 
 ### Floyd-Warshall
+모든 노드 간 최단 경로를 구하는 알고리즘  
+음의 가중치 간선 허용  
+
+1. 하나의 정점에서 다른 정점으로 바로 갈 수 있으면 최소 비용을, 갈 수 없다면 INF값을 저장
+2. 3중 for문을 통해 거쳐가는 정점을 설정한 후 해당 정점을 거쳐서 비용이 줄어드는 경우 값을 갱신
+
+```python
+def floyd_warshall():
+    for via in range(V):
+        for start in range(V):
+            for end in range(V):
+                if dist[start][via] + dist[via][end] < dist[start][end]:
+                    dist[start][end] = dist[start][via] + dist[via][end]
+
+
+V, E = map(int, input().split())
+dist = [[float('inf') for _ in range(V)] for _ in range(V)]
+for _ in range(E):
+    s, e, w = map(int, input().split())
+    dist[s][e] = w
+```
+
+## 출처
+[memgraph](https://memgraph.com/blog/graph-search-algorithms-developers-guide)  
+[mjieun.log](https://velog.io/@mjieun/Algorithm-%EB%B2%A8%EB%A7%8C-%ED%8F%AC%EB%93%9C-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98Bellman-Ford-algorithm-Python)
