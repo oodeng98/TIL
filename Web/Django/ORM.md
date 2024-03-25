@@ -49,4 +49,84 @@ Django shell 실행
 ```bash
 python manage.py shell_plus
 ```
+
+### Create
+데이터 객체를 생성하는 3가지 방법  
+1. 특정 테이블에 새로운 행을 추가하여 데이터 추가
+```python
+article = Article()  # Article class로부터 article instance 생성
+article.title = 'first'  # 인스턴스 변수 title에 값 할당
+article.content = 'django'  # 인스턴스 변수 content에 값 할당
+
+# save를 하지 않으면 DB에 값이 저장되지 않음
+article.save()
+Article.objects.all() # article object를 전부 확인할 수 있음
+```
 <!-- Django ORM 0325 22page부터 다시 정리 -->
+2. instance를 생성함과 동시에 값을 할당
+```python
+article = Article(title='second', content='django')
+
+# 마찬가지로 save를 하지 않으면 DB에 값이 저장되지 않음
+article.save()
+```
+3. QuerySet API 중 create() 메서드 활용
+```python
+Article.objects.create(title='third', content='django')
+# save가 없어도 DB에 값이 저장된다
+```
+
+### Read
+데이터 조회  
+대표적인 조회 메서드
+- Return new QuerySets
+  - all(): 전체 데이터 조회
+  ```python
+  Article.objects.all()
+  ```
+  - filter(): 특정 조건의 데이터 조회
+  ```python
+  Article.objects.filter(content='django')
+  ```
+- Do not return QuerySets
+  - get(): 단일 데이터 조회
+  ```python
+  Article.objects.get(pk=1)
+  ```
+
+get의 특징
+- 객체를 찾을 수 없으면 DoesNotExist 예외를 발생시키고, 둘 이상의 객체를 찾으면 MultipleObjectsReturned 예외를 발생시킴
+- 위와 같은 특징을 가지고 있기 때문에 primary key와 같이 고유성을 보장하는 조회에서 사용해야 함
+
+### Update
+데이터 수정  
+인스턴스 변수를 변경 후 save 메서드 호출
+```python
+article = Article.objects.get(pk=1)
+article.title = 'byebye'
+article.save()
+```
+
+### Delete
+데이터 삭제  
+삭제하려는 데이터 조회 후 delete 메서드 호출
+```python
+article = Article.objects.get(pk=1)
+article.delete()  # 삭제 후 반환함
+Article.objects.get(pk=1)  # 삭제한 데이터는 더이상 조회할 수 없음
+```
+
+## 참고
+
+### Field lookups
+- 특정 레코드에 대한 조건을 설정하는 방법
+- QuerySet 메서드 filter(), exclude() 및 get()에 대한 키워드 인자로 지정
+
+```python
+# content column에 dja가 포함된 모든 데이터 조회
+Article.objects.filter(content__contains='dja')
+```
+
+### ORM, QuerySet API를 사용하는 이유
+- 데이터베이스 쿼리를 추상화하여 Django 개발자가 데이터베이스와 직접 상호작용하지 않아도 되도록 함
+- 데이터베이스와의 결합도를 낮추고 개발자가 더욱 직관적이고 생산적으로 개발할 수 있도록 도움
