@@ -42,7 +42,7 @@ Django에서 어플리케이션을 구조화하는 패턴
 View -> Template, Controller -> View  
 
 ### 프로젝트와 앱
-![project & app](project_app.png)
+![project & app](./img/project_app.png)
 
 Django project
 - 어플리케이션의 집합  
@@ -104,7 +104,7 @@ tests.py
 - 프로젝트 테스트 코드를 작성하는 곳
 
 ## 요청과 응답
-![request_response](request_response.png)
+![request_response](./img/request_response.png)
 
 1. URLs
 ```python
@@ -315,7 +315,7 @@ Django Model
 - 테이블 구조를 설계하는 청사진(blueprint)  
 
 ### Model class
-![model](model.png)
+![model](./img/model.png)
 - django.db.models 모듈의 Model이라는 부모 클래스를 상속받음
 - Model은 model에 관련된 모든 코드가 이미 작성되어있는 클래스
 - 개발자는 가장 중요한 테이블 구조를 어떻게 설계할지에 대한 코드만 작성하도록 하기 위한 것(상속을 활용한 프레임워크의 기능 제공)
@@ -413,7 +413,7 @@ admin.site.register(Article)
 Full Stack 혹은 Backend Framework라 부름
 
 ### 추가 템플릿 경로 지정
-![add template path](add_template_path.png)
+![add template path](./img/add_template_path.png)
 
 BASE_DIR
 - settings에서 경로지정을 편하게 하기 위해 최상단 지점을 지정해놓은 변수
