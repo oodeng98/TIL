@@ -122,7 +122,7 @@ def create(request):
 ```html
 {% if app_name.image %}
     <img src="{{ app_name.image.url }}" alt="img">
-  {% endif %}
+{% endif %}
 ```
 
 #### 업로드 이미지 수정
