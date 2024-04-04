@@ -134,3 +134,237 @@ urlpatterns = [
 ```html
 {{ article.comment_set.count }}
 ```
+
+
+## User와 다른 모델 간의 모델 관계 설정
+
+### User(1) & Article(N)
+- 0개 이상의 게시글은 1명의 회원에 의해 작성될 수 있음  
+
+#### user 외래 키 정의
+```python
+# articles/models.py
+from django.conf import settings
+
+
+class Article(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    title = models.CharField(max_length=10)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+||get_user_model()|settings.AUTH_USER_MODEL|
+|-|----------------|------------------------|
+|반환 값|User Object(객체)|'accounts.User'(문자열)|
+|사용 위치|models.py가 아닌 다른 모든 위치|models.py|
+
+이렇게 사용하는 이유
+- django 프로젝트 내부적인 구종 순서와 반환 값에 따른 이유
+- django 실행 순서상 models.py의 순서가 빠른 편
+- get_user_model()을 사용하기 위해선 객체를 생성할 수 있어야 하는데 models.py의 순서에는 해당 객체가 존재하지 않아서 오류가 생김
+
+Migration
+- 기존에 테이블이 있는 상태에서 Foreign Key를 추가하면 makemigrations에서 문제 발생
+- 기본적으로 모든 필드에는 NOT NULL 제약조건이 있기 때문에 데이터가 없이는 새로운 필드가 추가되지 못함
+```bash
+$ python manage.py makemigrations
+It is impossible to add a non-nullable field 'user' to article without specifying a default. This is because 
+the database needs something to populate existing rows.
+Please select a fix:
+ 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
+ 2) Quit and manually define a default value in models.py.
+Select an option:
+```
+- 1을 입력하고 Enter 진행
+- 추가하는 외래 키 필드에 어떤 데이터를 넣을 것인지 직접 입력해야 함
+```bash
+Please enter the default value as valid Python.
+The datetime and django.utils.timezone modules are available, so it is possible to provide e.g. timezone.now 
+as a value.
+Type 'exit' to exit this prompt
+```
+- 마찬가지로 1을 입력하고 Enter 진행
+  - 기존에 작성된 게시글이 있다면 모두 1번 회원이 작성한 것으로 처리
+
+#### 게시글 CREATE
+기존 ArticleForm의 출력이 변화되었을 것(외래 키가 추가되었으므로)  
+User 모델에 대한 외래 키 데이터 입력을 받기 위해 불필요한 input이 출력됨  
+```python
+# form에서 외래 키 입력 부분 제외
+# articles/forms.py
+
+
+class ArticleForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        # fields = '__all__'
+        fields = ('title', 'content', )
+```
+```python
+# 앞서 테이블에서 외래 키를 따로 입력해줬던 과정 동일하게 진행, 단 pk를 받아올 필요가 없다는 차이가 존재
+# articles/views.py
+@login_required
+def create(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.user = request.user
+            article.save()
+            return redirect('articles:detail', article.pk)
+    else:
+        ...
+```
+
+#### 게시글 READ
+각 게시글 작성자의 이름 출력  
+```html
+<!-- articles/index.html -->
+{% for article in articles %}
+<p>작성자: {{ article.user }}</p>
+<p>글 번호: {{ article.pk }}</p>
+<a href="{% url "articles:detail" article.pk %}">
+    <p>글 제목: {{ article.title }}</p>
+</a>
+<p>글 내용: {{ article.content }}</p>
+<hr>
+{% endfor %}
+```
+```html
+<!-- articles/detail.html -->
+<h1>Detail</h1>
+<h2>{{ article.pk }} 번째 글</h2>
+<hr>
+<p>작성자: {{ article.user }}</p>
+<p>제목: {{ article.title }}</p>
+<p>내용: {{ article.content }}</p>
+<p>작성일: {{ article.created_at }}</p>
+<p>수정일: {{ article.updated_at }}</p>
+```
+
+#### 게시글 UPDATE
+본인의 게시글만 수정할 수 있도록 개선
+```python
+# articles/views.py
+
+@login_required
+def update(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.user == article.user:  # 여기서 비교
+        if request.method == 'POST':
+            form = ArticleForm(request.POST, instance=article)
+            if form.is_valid():
+                form.save()
+                return redirect('articles:detail', article.pk)
+        else:
+            form = ArticleForm(instance=article)
+    else:
+        return redirect('articles:index')  # 게시글 작성자가 아니면 return
+    context = {
+        'form': form,
+        'article': article,
+    }
+    return render(request, 'articles/update.html', context)
+```
+해당 게시글 작성자가 아니라면 수정/삭제 버튼을 출력하지 않도록 설정
+```html
+<!-- articles/detail.html -->
+{% if request.user == article.user %}
+  <a href="{% url "articles:update" article.pk %}">UPDATE</a>
+  <form action="{% url "articles:delete" article.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="DELETE">
+  </form>
+{% endif %}
+```
+
+#### 게시글 DELETE
+본인의 게시글만 삭제할 수 있도록 설정
+```python
+@login_required
+def delete(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.user == article.user:  # 삭제를 요청한 사용자와 게시글 작성자 비교
+        article.delete()
+    return redirect('articles:index')
+```
+
+### User(1) & Comment(N)
+- 0개 이상의 댓글은 1명의 회원에 의해 작성될 수 있음
+
+#### user 외래 키 정의
+```python
+# articles/models.py
+
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    content = models.CharField(max_length=200)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+```
+Article에서와 마찬가지로 makemigrations->migrate 과정 진행
+
+#### 댓글 CREATE
+댓글 작성 시 작성자 정보가 함께 저장될 수 있도록 설정
+```python
+# articles/views.py
+
+def comments_create(request, pk):
+    article = Article.objects.get(pk=pk)
+    comments = article.comment_set.all()
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.article = article
+        comment.user = request.user
+        comment.save()
+        return redirect('articles:detail', article.pk)
+    ...
+```
+
+#### 댓글 READ
+댓글 출력 시 댓글 작성자와 함께 출력
+```html
+<!-- articles/detail.html -->
+{% for comment in comments %}
+    <li>
+    {{ comment.user }} - {{ comment.content }}
+    <form action="{% url "articles:comments_delete" article.pk comment.pk %}" method="POST" style="display: inline;">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+    </form>
+    </li>
+{% endfor %}
+```
+
+#### 댓글 DELETE
+본인의 댓글만 삭제할 수 있도록 설정
+```python
+# articles/views.py
+
+def comments_delete(request, article_pk, comment_pk):
+    comment = Comment.objects.get(pk=comment_pk)
+    if request.user == comment.user:
+        comment.delete()
+    return redirect('articles:detail', article_pk)
+```
+
+해당 댓글의 작성자가 아니라면 댓글 삭제 버튼을 출력하지 않음
+```html
+<!-- articles/detail.html -->
+<ul>
+{% for comment in comments %}
+    <li>
+    {{ comment.user }} - {{ comment.content }}
+    {% if request.user == comment.user %}
+        <form action="{% url "articles:comments_delete" article.pk comment.pk %}" method="POST" style="display: inline;">
+        {% csrf_token %}
+        <input type="submit" value="삭제">
+        </form>
+    {% endif %}
+    </li>
+{% endfor %}
+</ul>
+```
