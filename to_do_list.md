@@ -12,3 +12,5 @@
 4. https://web.dev/?hl=ko
 
 5. deque, heapq 뜯어보기
+
+6. git reset, abort 등 commit 및 push 관련된 내용 정리하기
