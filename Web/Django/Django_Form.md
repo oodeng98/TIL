@@ -140,6 +140,34 @@ form = ArticleForm(request.POST, instance=article)
 form.save()
 ```
 
+### ForeignKey SelectBox에서 원하는 값만 보이도록 하는 방법
+ModelForm에서 ForeignKey를 exclude하지 않으면 현재 존재하는 ForeignKey에서 값을 선택하도록 하는데, 특정 조건을 기준으로 필터링하여 내가 원하는 ForeignKey만 보이도록 하고 싶다면?  
+```python
+# forms.py
+class SomeModelForm(forms.ModelForm):
+    # ModelForm 생성자 재정의
+    # user 인자 추가 -> 추후 ModelForm 호출시 첫번째 인자로 넘길 값을 받을 변수
+    def __init__(self, user, *args, **kwargs):
+        # 부모의 ModelForm의 생성자 실행
+        super(SomeModelForm, self).__init__(*args, **kwargs)
+        # 1:N 관계를 맺을 필드 재정의
+        # 필드에 노출될 queryset을 ModelForm 호출시 넘겨준 `user`를 기반으로 참조 대상 조회
+        self.fields['RelationModelFieldname'].queryset = RelationModel.objects.filter(user=user)
+
+    class Meta:
+        model = SomeModelForm
+        fields = '__all__'
+# 사용 예시
+class BookForm(forms.ModelForm):
+    def __init__(self, user, *args, **kwargs):
+        super(BookForm, self).__init__(*args, **kwargs)
+        self.fields['author'].queryset = Author.objects.filter(user=user)
+    class Meta:
+        model = Book
+        fields = '__all__'
+
+```
+
 ## Handling HTTP requests
 
 ### view 함수 구조 변화
