@@ -430,3 +430,14 @@ Django는 URL 끝에 '/'가 없다면 자동으로 붙임
 - 검색 엔진 로봇이나 웹트래픽 분석 도구에서는 이 두 주소를 서로 다른 페이지로 보기 때문  
 그래서 Django는 검색 엔진이 혼동하지 않게 하기 위해 무조건 붙이는 것을 선택  
 그러나 모든 프레임워크가 이렇게 동작하는 것은 아니니 주의
+
+### instance를 가져왔을 때 object..이 아니라 특정 이름이 보이도록 하고 싶다면?
+```python
+# models.py
+
+class Author(models.Model):
+    fieldname = ...
+    def __str__(self):
+        return self.fieldname
+# 이렇게 하면 object..대신 해당 instance의 fieldname 값이 대신 보인다.
+```
