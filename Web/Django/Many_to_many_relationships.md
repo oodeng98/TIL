@@ -222,3 +222,216 @@ User-Article 간 사용 가능한 전체 related manager
   - 게시글을 좋아요 한 유저 - M:N
 - user.like_articles
   - 유저가 좋아요 한 게시글(역참조) - M:N
+
+
+## 팔로우 기능 구현
+### 프로필
+각 회원의 개인 프로필 페이지에 팔로우 기능을 구현하기 위해 프로필 페이지를 먼저 구현
+
+### 팔로우 기능 구현
+User(M) - User(N)
+- 0명 이상의 회원은 0명 이상의 회원과 관련
+- 회원은 0명 이상의 팔로워를 가질 수 있고, 0명 이상의 다른 회원들을 팔로잉 할 수 있음
+<!-- 0409 14page부터 진행 -->
+1. ManyToManyField 작성
+```python
+# accounts/models.py
+
+class User(AbstractUser):
+    followings = models.ManyToManyField("self", symmetrical=False, related_name='followers')
+```
+- 참조: 내가 팔로우하는 사람들(followings)
+- 역참조: 상대방 입장에서 팔로워들(followers)
+- 바뀌어도 상관은 없으나 관계 조회 시 생각하기 편한 방향으로 정한 것  
+2. view 함수 작성
+```python
+# accounts/views.py
+
+@login_required
+def follow(request, user_pk):
+    User = get_user_model()
+    person = User.objects.get(pk=user_pk)
+    if person != request.user:
+        if request.user in person.followers.all():
+            person.followers.remove(request.user)
+        else:
+            person.followers.add(request.user)
+    return redirect('accounts:profile', person.username)
+```
+## exists()
+QuerySet에 결과가 포함되어 있으면 True를 반환하고 결과가 포함되어 있지 않으면 False를 반환
+- 큰 QuerySet에 있는 특정 객체 검색에 유용
+```python
+# accounts/views.py
+
+@login_required
+def follow(request, user_pk):
+    ...
+    # if request.user in person.followers.all():
+    if person.followers.filter(pk=request.user.pk).exists():
+        person.followers.remove(request.user)
+    else:
+        person.followers.add(request.user)
+    return redirect('accounts:profile', person.username)
+```
+
+
+## Fixtures
+Django가 데이터베이스로 가져오는 방법을 알고 있는 데이터 모음  
+사용 목적: 초기 데이터 제공  
+
+사전 준비
+- M:N까지 모두 작성된 Django 프로젝트에서 유저, 게시글, 댓글 등 각 데이터를 최소 2~3개 이상 생성  
+
+fixtures 관련 명령어
+- dumpdata: 생성(데이터 추출)
+  - 데이터베이스의 모든 데이터를 추출
+  ```bash
+  python managy.py dumpdata [[app_name[.ModelName]] [app_name[.ModelName]] ...] > filename.json
+  <!-- 예시 -->
+  python managy.py dumpdata --indent 4 articles.article > articles.json
+  ```
+- loaddata: 로드(데이터 입력)
+  - Fixtures 데이터를 데이터베이스로 불러오기
+  - Fixtures 파일 기본 경로
+    - app_name/fixtures/
+    - Django는 설치된 모든 app의 디렉토리에서 fixtures 폴더 이후의 경로로 fixtures 파일을 찾아 load
+    ```bash
+    python manage.py loaddata articles.json users.json comments.json
+    ```
+  - loaddata 순서 주의사항
+    - 만약 loaddata를 한번에 실행하지 않고 별도로 실행한다면 모델 관계에 따라 load 순서가 중요할 수 있음
+      - comment는 article에 대한 key 및 user에 대한 key가 필요
+      - article은 user에 대한 key가 필요
+    - 이렇게 되면 user->article->comment 순서로 데이터를 load해야 오류가 발생하지 않음
+### 참고
+모든 모델을 한번에 dump하기
+```bash
+# 3개의 모델을 하나의 json 파일로
+python manage.py dumpdata --indent 4 articles.article articles.comment accounts.user > data.json
+# 모든 모델을 하나의 json 파일로
+python manage.py dumpdata --indent 4 > data.json
+```
+loaddata 시 encoding codec 관련 에러가 발생하는 경우  
+1. dumpdataa 시 추가 옵션 작성
+```bash
+python -Xutf8 manage.py dumpdata ...
+```
+2. 메모장 활용
+- 메모장으로 json 파일 열기
+- 다른 이름으로 저장
+- 인코딩을 UTF8로 선택 후 저장
+
+웬만하면 Fixtures 파일을 직접 만들지 말 것
+
+## Improve query
+query 개선하기
+- 같은 결과를 얻기 위해 DB측에 보내는 query개수를 점차 줄여 조회하기  
+
+### annotate  
+SQL의 GROUP BY를 사용  
+
+문제 상황: 각 게시글마다 댓글 개수를 반복 평가
+```html
+<p>댓글 개수: {{ article.comment_set.count }}</p>
+```
+문제 해결
+- 게시글을 조회하면서 댓글 개수까지 한번에 조회해서 가져오기
+```python
+# views.py
+
+def index_1(request):
+    # articles = Article.objects.order_by('-pk')
+    articles = Article.objects.annotate(Count('comment')).order_by('-pk')
+    context = {
+        'articles': articles,
+    }
+    return render(request, 'articles/index_1.html', context)
+```
+```html
+<p>댓글 개수: {{ article.comment__count }}</p>
+```
+
+### select_rated
+SQL의 INNER JOIN을 사용
+- 1:1 또는 N:1 참조 관계에서 사용  
+문제 상황: 각 게시글마다 작성한 유저명까지 반복 평가
+```html
+{% for article in articles %}
+  <h3>작성자 : {{ article.user.username }}</h3>
+  <p>제목 : {{ article.title }}</p>
+  <hr>
+{% endfor %}
+```
+문제 해결
+- 게시글을 조회하면서 유저 정보까지 한번에 조회해서 가져오기
+```python
+def index_2(request):
+    # articles = Article.objects.order_by('-pk')
+    articles = Article.objects.select_related('user').order_by('-pk')
+    context = {
+        'articles': articles,
+    }
+    return render(request, 'articles/index_2.html', context)
+```
+
+### prefetch_related
+M:N 또는 N:1 역참조 관계에서 사용
+- SQL이 아닌 Python을 사용한 JOIN을 진행  
+
+문제 상황
+- 각 게시글 출력 후 각 게시글의 댓글 목록까지 개별적으로 모두 평가
+```html
+{% for article in articles %}
+  <p>제목 : {{ article.title }}</p>
+  <p>댓글 목록</p>
+  {% for comment in article.comment_set.all %}
+    <p>{{ comment.content }}</p>
+  {% endfor %}
+  <hr>
+{% endfor %}
+```
+문제 해결
+- 게시글을 조회하면서 참조된 댓글까지 한번에 조회해서 가져오기
+```python
+def index_3(request):
+    # articles = Article.objects.order_by('-pk')
+    articles = Article.objects.prefetch_related('comment_set').order_by('-pk')
+    context = {
+        'articles': articles,
+    }
+    return render(request, 'articles/index_3.html', context)
+```
+
+### select_related & prefetch_related
+문제 상황
+- 게시글 + 각 게시글의 댓글 목록 + 댓글의 작성자를 단계적으로 평가
+```html
+{% for article in articles %}
+  <p>제목 : {{ article.title }}</p>
+  <p>댓글 목록</p>
+  {% for comment in article.comment_set.all %}
+    <p>{{ comment.user.username }} : {{ comment.content }}</p>
+  {% endfor %}
+  <hr>
+{% endfor %}
+```
+문제 해결 1단계
+- 게시글을 조회하면서 참조된 댓글까지 한번에 조회
+```python
+def index_4(request):
+    # articles = Article.objects.order_by('-pk')
+    articles = Article.objects.prefetch_related('comment_set').order_by('-pk')
+    ...
+```
+문제 해결 2단계
+- 게시글 + 각 게시글의 댓글 목록 + 댓글의 작성자를 한번에 조회
+```python
+def index_4(request):
+    # articles = Article.objects.order_by('-pk')
+    # articles = Article.objects.prefetch_related('comment_set').order_by('-pk')
+    articles = Article.objects.prefetch_related(
+        Prefetch('comment_set', queryset=Comment.objects.select_related('user'))
+    ).order_by('-pk')
+    ...
+```
