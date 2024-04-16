@@ -120,8 +120,6 @@ iss53의 내용
 ```
 이 나오게 된다.
 
-<!-- https://lab.ssafy.com/s11/a01/only_pull_lecture/-/blob/master/Git_branch/02-branch-merging.pdf?ref_type=heads에서 Branch Merge scenario부터 정리 -->
-
 ## Branch Merge Scenario
 사전 세팅
 ```bash
