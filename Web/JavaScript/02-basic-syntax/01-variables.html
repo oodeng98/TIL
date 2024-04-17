@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // let
+    // let number = 10
+    // number = 20 // 재할당 가능
+    // let number = 20 // 재선언 불가능
+
+    // const
+    // const number2 = 10
+    // number2 = 10 // 재할당 불가능
+    // const number2 = 20 // 재선언 불가능
+    // const number3 // const declarations must be initialized(선언 시 반드시 초기값 설정 필요)
+
+    // primitive type
+    const bar = 'bar'
+    console.log(bar) // bar
+    bar.toUpperCase()
+    console.log(bar) // bar
+
+    bar2 = bar.toUpperCase()
+    console.log(bar2)
+
+    let a = 10
+    let b = a
+    b = 20
+    console.log(a) // 10
+    console.log(b) // 20
+
+    // reference type
+    const obj1 = {name: 'Alice', age: 30}
+    const obj2 = obj1
+    obj2.age = 40
+
+    console.log(obj1) // {name: 'Alice', age: 40}
+    console.log(obj2) // {name: 'Alice', age: 40}
+  </script>
+</body>
+
+</html>
