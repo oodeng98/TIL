@@ -1,11 +1,14 @@
 # Priority Queue
+
 Priority Queue는 높은 우선순위를 가진 원소는 낮은 우선순위를 가진 원소보다 먼저 처리되는 자료구조
 
 ## 문제 예시
+
 주어진 N(2<= N <=100)개의 수를 작은 숫자가 높은 우선순위를 갖는 Priority Queue에 저장하고, 우선 순위가 높은 숫자부터 차례대로 출력하시오. (입력에는 오류가 없다고 가정)
 
-|Input|Output|
-|---|---|
+| Input | Output |
+| ----- | ------ |
+
 2 //테스트 케이스 수
 10 //입력 수
 |10 49 38 17 56 92 8 1 13 55 //입력 데이터|1 8 10 13 17 38 49 55 56 92
@@ -13,6 +16,7 @@ Priority Queue는 높은 우선순위를 가진 원소는 낮은 우선순위를
 4 22 50 13 5 1 22 35 21 7 99 100 14|1 4 5 7 13 14 21 22 22 35 50 99 100
 
 ## 구현
+
 ```python
 MAX_SIZE = 100
 heapSize = 0
@@ -89,7 +93,7 @@ def main():
         print()
 ```
 
-```java
+````java
 import java.util.Scanner;
 
 class Solution {
@@ -115,7 +119,7 @@ class Solution {
 		heap[heapSize] = value;
 
 		int current = heapSize;
-		while (current > 0 && heap[current] < heap[(current - 1) / 2]) 
+		while (current > 0 && heap[current] < heap[(current - 1) / 2])
 		{
 			int temp = heap[(current - 1) / 2];
 			heap[(current - 1) / 2] = heap[current];
@@ -177,22 +181,22 @@ class Solution {
 
 	public static void main(String arg[]) throws Exception {
 		sc = new Scanner(System.in);
-		
+
 		int T = sc.nextInt();
 
 		for (int test_case = 1; test_case <= T; test_case++)
 		{
 			int N = sc.nextInt();
-			
+
 			heapInit();
-			
+
 			for (int i = 0; i < N; i++)
 			{
 				int value = sc.nextInt();
 				heapPush(value);
 			}
 
-			System.out.print("#" + test_case + " ");			
+			System.out.print("#" + test_case + " ");
 			for (int i = 0; i < N; i++)
 			{
 				System.out.print(heapPop() + " ");
@@ -202,3 +206,4 @@ class Solution {
 		sc.close();
 	}
 }```
+````

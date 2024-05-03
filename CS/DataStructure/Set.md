@@ -1,15 +1,18 @@
 # Set
+
 Set은 집합을 정의하며 요소의 중복을 허용하지 않는 자료구조
 
 ## 문제 예시
+
 입력으로 주어진 N개의 Command 를 수행한 후
 Set 에 있는 모든 원소를 오름차순으로 출력하라.
 
 1 : add
 2 : remove
 
-|Input|Output|
-|---|---|
+| Input | Output |
+| ----- | ------ |
+
 1
 11
 1 50
@@ -24,6 +27,7 @@ Set 에 있는 모든 원소를 오름차순으로 출력하라.
 1 10|10 40 60 70 80
 
 ## 구현
+
 ```java
 import java.util.Scanner;
 
@@ -159,3 +163,4 @@ class Solution {
 		sc.close();
 	}
 }
+```

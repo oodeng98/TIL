@@ -1,7 +1,9 @@
 # Linked List
-Linked List는 각 노드가 데이터와 포인터를 가지고 한 줄로 연결되어 있는 방식으로 데이터를 저장하는 자료 구조  
+
+Linked List는 각 노드가 데이터와 포인터를 가지고 한 줄로 연결되어 있는 방식으로 데이터를 저장하는 자료 구조
 
 ## 문제 예시
+
 주어진 N(2<= N <=100)개의 수를 순서대로 Linked List에 넣은 후, 2개의 간격으로 하나씩 데이터를 뺄 때 마지막에 남아 있는 데이터를 출력하시오.  
 Ex) 1 2 3 4 5 -> 2 3 4 5 -> 2 3 5 -> 2 5 -> 2  
 |Input|Output|
@@ -13,6 +15,7 @@ Ex) 1 2 3 4 5 -> 2 3 4 5 -> 2 3 5 -> 2 5 -> 2
 |1 2 3 4 5 6|5|
 
 ## 구현
+
 ```python
 class ListNode:
     data = 0
@@ -73,7 +76,8 @@ def main():
 
         print("#%d %d" % (test_case, head.data))
 ```
-```java
+
+````java
 import java.util.Scanner;
 
 
@@ -81,7 +85,7 @@ class ListNode {
 	int data;
 	ListNode prev;
 	ListNode next;
-	
+
 	public ListNode()
 	{
 		data = 0;
@@ -97,7 +101,7 @@ class ListNode {
 		{
 			head = node;
 		}
-		else 
+		else
 		{
 			ListNode last = head.prev;
 			last.next = node;
@@ -107,14 +111,14 @@ class ListNode {
 		}
 		return head;
 	}
-	
+
 	public static ListNode removeListNode(ListNode head, ListNode node)
 	{
 		if (head == head.next)
 		{
 			return null;
 		}
-		else 
+		else
 		{
 			ListNode prevNode = node.prev;
 			ListNode nextNode = node.next;
@@ -122,10 +126,10 @@ class ListNode {
 			nextNode.prev = prevNode;
 			return (head == node) ? nextNode : head;
 		}
-		
+
 	}
 }
-	
+
 
 class Solution
 {
@@ -154,3 +158,4 @@ class Solution
 		sc.close();
 	}
 }```
+````

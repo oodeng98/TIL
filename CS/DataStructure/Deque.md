@@ -1,7 +1,9 @@
 # Deque(덱)
-Deque은 Queue의 일반화 된 버전으로 Queue의 양 끝에서 데이터의 삽입/삭제가 가능하게끔 만든 자료구조  
+
+Deque은 Queue의 일반화 된 버전으로 Queue의 양 끝에서 데이터의 삽입/삭제가 가능하게끔 만든 자료구조
 
 ## 문제 예시
+
 크기가 N 인 Queue 에서 주어진 M 개의 Command 를 수행하는 프로그램을 작성하라.  
 각각의 Command는 1~6 사이의 정수값을 가지며, 다음과 같은 동작을 수행한다.
 
@@ -10,9 +12,10 @@ Deque은 Queue의 일반화 된 버전으로 Queue의 양 끝에서 데이터의
 3: front에 있는 element 출력  
 4: rear에 있는 element 출력  
 5: front에 있는 element 삭제  
-6: rear에 있는 element 삭제  
+6: rear에 있는 element 삭제
 
 ## 구현
+
 ```python
 from collections import deque
 

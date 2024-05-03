@@ -1,7 +1,9 @@
 # Graph
-컴퓨터 시스템에서 그래프는 연결되어 있는 객체간의 관계를 표현할 수 있는 자료구조  
+
+컴퓨터 시스템에서 그래프는 연결되어 있는 객체간의 관계를 표현할 수 있는 자료구조
 
 ## 문제 예시
+
 방향성이 없는 그래프의 V개의 정점과 E개의 간선 정보가 주어진다.  
 첫째 줄에는 V와 E의 갯수, 정점의 정보를 묻는 쿼리의 갯수가 주어지고 둘째 줄부터 간선의 정보(연결된 정점의 번호쌍)가 주어진다.  
 그 다음 줄에는 정점의 인접정점들이 무엇인지 묻는 쿼리가 정점번호로 주어진다.  
@@ -38,6 +40,7 @@
 |7|1 6 8|
 
 ## 구현
+
 ```python
 num_vertices = 0
 adjListArr = list()
@@ -83,7 +86,8 @@ def main():
             sv = int(input())
             displayGraph(sv)
 ```
-```java
+
+````java
 import java.util.Scanner;
 
 
@@ -93,30 +97,30 @@ class Graph
 	{
 		int vertex;
 		AdjlistNode next;
-		
+
 		public AdjlistNode(int v)
 		{
 			vertex = v;
 			next = null;
 		}
 	}
-	
+
 	class AdjList
 	{
 		int num_members;
 		AdjlistNode head;
 		AdjlistNode tail;
-		
+
 		public AdjList()
 		{
 			num_members = 0;
 			head = tail = null;
 		}
 	}
-	
+
 	int num_vertices;
 	AdjList []adjListArr;
-	
+
 	public Graph(int n)
 	{
 		num_vertices = n;
@@ -126,7 +130,7 @@ class Graph
 			adjListArr[i] = new AdjList();
 		}
 	}
-	
+
 	void addEdge(int src, int dest)
 	{
 		AdjlistNode newNode = new AdjlistNode(dest);
@@ -135,25 +139,25 @@ class Graph
 			adjListArr[src].tail.next = newNode;
 			adjListArr[src].tail = newNode;
 		}
-		else 
+		else
 		{
 			adjListArr[src].head = adjListArr[src].tail = newNode;
 		}
 		adjListArr[src].num_members++;
-		
+
 		newNode = new AdjlistNode(src);
 		if (adjListArr[dest].tail != null)
 		{
 			adjListArr[dest].tail.next = newNode;
 			adjListArr[dest].tail = newNode;
 		}
-		else 
+		else
 		{
 			adjListArr[dest].head = adjListArr[dest].tail = newNode;
 		}
 		adjListArr[dest].num_members++;
 	}
-	
+
 	void display(int i)
 	{
 		AdjlistNode adjList = adjListArr[i].head;
@@ -165,7 +169,7 @@ class Graph
 		System.out.printf("\n");
 	}
 }
-	
+
 
 class Solution
 {
@@ -195,3 +199,4 @@ class Solution
 		sc.close();
 	}
 }```
+````

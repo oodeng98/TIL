@@ -1,8 +1,10 @@
 # Tree
+
 트리 구조란 그래프의 일종으로, 여러 노드가 한 노드를 가리킬 수 없는 구조  
-간단하게는 회로가 없고, 서로 다른 두 노드를 잇는 길이 하나뿐인 그래프를 트리라고 부른다.  
+간단하게는 회로가 없고, 서로 다른 두 노드를 잇는 길이 하나뿐인 그래프를 트리라고 부른다.
 
 ## 문제 예시
+
 주어진 입력 값으로 트리를 구성하고, 구성된 트리를 전위순회하고 방문한 노드의 번호를 출력하시오.  
 첫 줄에는 전체 테스트 케이스의 수(T), 두 번째 줄에는 노드의 총 수(nodeNum), 간선의 총 수(edgeNum)가 주어진다.  
 그 다음 줄에는 간선이 나열 된다. 간선은 그것을 이루는 두 정점으로 표기된다. 간선은 항상 “부모 자식” 순서로 표기 된다.  
@@ -19,6 +21,7 @@
 31 7 2 17 27 32 14 30 1 21 45 26 44 27 39 11 26 3 48 6 3 44 2 49 42 13 48 8 23 33 11 10 8 42 41 31 17 4 8 22 25 23 21 41 28 25 13 16 46 2 31 35 42 19 32 18 27 50 45 15 28 20 46 28 44 40 40 5 15 48 9 34 1 46 17 29 35 36 21 45 14 37 23 14 6 39 11 9 19 24 26 47 16 38 40 12 47 43|1 21 41 31 7 35 36 45 26 3 44 27 32 18 50 40 5 12 47 43 15 48 6 39 11 10 9 34 8 42 13 16 38 19 24 22 46 2 17 4 29 49 28 25 23 33 14 30 37 20
 
 ## 구현
+
 ```python
 class Tree:
     MAX_CHILD_NUM = 2
@@ -86,13 +89,14 @@ def main():
         tree.preOrder(root)
         print()
 ```
-```java
+
+````java
 import java.util.Scanner;
 
 class Tree {
 
 	static final int MAX_CHILD_NUM = 2;
-	
+
 	class TreeNode {
 		int parent;
 		int []child = new int[MAX_CHILD_NUM];
@@ -118,7 +122,7 @@ class Tree {
 		}
 	}
 
-	public void addChild(int parent, int child) 
+	public void addChild(int parent, int child)
 	{
 		int found = -1;
 		for (int i = 0; i < MAX_CHILD_NUM; i++)
@@ -130,16 +134,16 @@ class Tree {
 			}
 		}
 		if (found == -1) return;
-		
+
 		treenode[parent].child[found] = child;
 		treenode[child].parent = parent;
 	}
 
-	public int getRoot() 
+	public int getRoot()
 	{
-		for (int i = 1; i < nodeNum; i++) 
+		for (int i = 1; i < nodeNum; i++)
 		{
-			if (treenode[i].parent == -1) 
+			if (treenode[i].parent == -1)
 			{
 				return i;
 			}
@@ -151,7 +155,7 @@ class Tree {
 	{
 		System.out.printf("%d ", root);
 
-		for (int i = 0; i < MAX_CHILD_NUM; i++) 
+		for (int i = 0; i < MAX_CHILD_NUM; i++)
 		{
 			int child = treenode[root].child[i];
 			if (child != -1)
@@ -163,17 +167,17 @@ class Tree {
 }
 
 class Solution {
-	
+
 	public static void main(String arg[]) throws Exception {
 		Scanner sc = new Scanner(System.in);
-		
+
 		int T = sc.nextInt();
 
-		for (int test_case = 1; test_case <= T; ++test_case) 
+		for (int test_case = 1; test_case <= T; ++test_case)
 		{
 			int node = sc.nextInt();
 			int edge = sc.nextInt();
-			
+
 			Tree tree = new Tree(node);
 
 			for (int i = 0; i < edge; i++)
@@ -191,3 +195,4 @@ class Solution {
 		sc.close();
 	}
 }```
+````

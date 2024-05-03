@@ -1,18 +1,22 @@
 # Hash
+
 Hash table은 키를 값에 매핑할 수 있는 구조인, 연관 배열 추가에 사용되는 자료 구조  
 Hash table은 Hash 함수를 사용하여 색인(index, Key)을 버킷(bucket)이나 슬롯(slot)의 배열로 계산한다.
 
 ## 문제 예시
-주어진 N개의 key, data쌍을 Hash table에 입력한 후, Q개의 key를 입력 받아 key에 해당하는 data를 각 줄에 출력하시오. (1<=N, Q<=4096)
-* Key : 최대 64개의 문자열
-* Data : 최대 128개의 문자열
 
-|Input|Output|
-|---|---|
-|2 // 테스트 케이스 수 T|
-|8 // 입력 데이터 수 N|
-|Attract Charm //key data|
-|Gather Collect|
+주어진 N개의 key, data쌍을 Hash table에 입력한 후, Q개의 key를 입력 받아 key에 해당하는 data를 각 줄에 출력하시오. (1<=N, Q<=4096)
+
+- Key : 최대 64개의 문자열
+- Data : 최대 128개의 문자열
+
+| Input                    | Output |
+| ------------------------ | ------ |
+| 2 // 테스트 케이스 수 T  |
+| 8 // 입력 데이터 수 N    |
+| Attract Charm //key data |
+| Gather Collect           |
+
 |Fundamental Essential
 Abundant Plentiful
 Achieve Accomplish
@@ -42,6 +46,7 @@ Huge|Tremendous
 |hydrogen|not find|
 
 ## 구현
+
 ```python
 hash = {}
 
@@ -77,7 +82,8 @@ def main():
             else:
                 print("not find")
 ```
-```java
+
+````java
 import java.util.Scanner;
 
 
@@ -90,7 +96,7 @@ class Hashtable
 
 	int capacity;
 	Hash tb[];
-	
+
 	public Hashtable(int capacity){
 		this.capacity = capacity;
 		tb = new Hash[capacity];
@@ -98,10 +104,10 @@ class Hashtable
 			tb[i] = new Hash();
 		}
 	}
-	
+
 	private int hash(String str){
 		int hash = 5381;
-		
+
 		for (int i = 0; i < str.length(); i++)
 		{
 			int c = (int)str.charAt(i);
@@ -110,7 +116,7 @@ class Hashtable
 		if (hash < 0) hash *= -1;
 		return hash % capacity;
 	}
-	
+
 	public String find(String key){
 		int h = hash(key);
 		int cnt = capacity;
@@ -123,7 +129,7 @@ class Hashtable
 		}
 		return null;
 	}
-	
+
 	boolean add(String key, String data){
 		int h = hash(key);
 		while(tb[h].key != null)
@@ -138,12 +144,12 @@ class Hashtable
 		return true;
 	}
 }
-	
+
 
 class Solution
 {
 	final static int MAX_TABLE = 4096;
-	
+
 	public static void main(String args[]) throws Exception{
 		Scanner sc = new Scanner(System.in);
 		int T = sc.nextInt();
@@ -167,7 +173,7 @@ class Solution
 				{
 					System.out.printf("%s\n", d);
 				}
-				else 
+				else
 				{
 					System.out.printf("not find\n");
 				}
@@ -176,3 +182,4 @@ class Solution
 		sc.close();
 	}
 }```
+````
